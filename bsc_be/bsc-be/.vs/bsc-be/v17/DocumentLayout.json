@@ -1,9 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc-be\\bsc-be\\",
+  "WorkspaceRootPath": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc-be\\bsc-be\\bsc-be\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\models\\rating.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\models\\rating.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\models\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\models\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\models\\type.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\models\\type.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
   ],
@@ -19,10 +35,62 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Rating.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Rating.cs",
+              "RelativeDocumentMoniker": "bsc-be\\Models\\Rating.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Rating.cs",
+              "RelativeToolTip": "bsc-be\\Models\\Rating.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAqwAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-19T03:46:12.229Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PaymentMethod.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\PaymentMethod.cs",
+              "RelativeDocumentMoniker": "bsc-be\\Models\\PaymentMethod.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\PaymentMethod.cs",
+              "RelativeToolTip": "bsc-be\\Models\\PaymentMethod.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-19T03:33:36.112Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Type.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Type.cs",
+              "RelativeDocumentMoniker": "bsc-be\\Models\\Type.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Type.cs",
+              "RelativeToolTip": "bsc-be\\Models\\Type.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAUAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-19T03:33:02.025Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\User.cs",
+              "RelativeDocumentMoniker": "bsc-be\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\User.cs",
+              "RelativeToolTip": "bsc-be\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAoAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-19T03:31:06.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc-be\\bsc-be\\bsc-be\\.gitignore",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\.gitignore",
               "RelativeDocumentMoniker": "bsc-be\\.gitignore",
-              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc-be\\bsc-be\\bsc-be\\.gitignore",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\.gitignore",
               "RelativeToolTip": "bsc-be\\.gitignore",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",

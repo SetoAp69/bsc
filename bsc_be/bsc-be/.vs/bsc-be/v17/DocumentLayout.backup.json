@@ -1,12 +1,71 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc-be\\bsc-be\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\models\\type.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\models\\type.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\models\\users.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|c:\\users\\adicipta\\training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{BA05740F-1BE6-4833-9AF4-D3B5186F8FA2}|bsc-be\\bsc-be.csproj|solutionrelative:bsc-be\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 129,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Type.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Type.cs",
+              "RelativeDocumentMoniker": "bsc-be\\Models\\Type.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Type.cs",
+              "RelativeToolTip": "bsc-be\\Models\\Type.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-19T03:33:02.025Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Users.cs",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Users.cs",
+              "RelativeDocumentMoniker": "bsc-be\\Models\\Users.cs",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\Models\\Users.cs",
+              "RelativeToolTip": "bsc-be\\Models\\Users.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-19T03:31:06.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\.gitignore",
+              "RelativeDocumentMoniker": "bsc-be\\.gitignore",
+              "ToolTip": "C:\\Users\\Adicipta\\Training\\mini-project\\bsc_be\\bsc-be\\bsc-be\\.gitignore",
+              "RelativeToolTip": "bsc-be\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-08-19T03:10:00.898Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

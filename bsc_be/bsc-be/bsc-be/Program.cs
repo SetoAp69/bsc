@@ -1,3 +1,4 @@
+using bsc_be.Middlewares;
 using bsc_be.Models;
 using bsc_be.Repositories;
 using bsc_be.Services;
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGigService, GigService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
 
 builder.Services.AddDbContext<BscDbContext>(
@@ -21,8 +23,8 @@ builder.Services.AddDbContext<BscDbContext>(
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -30,9 +32,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

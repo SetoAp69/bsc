@@ -4,6 +4,9 @@ namespace bsc_be.Models
 {
     public class BscDbContext : DbContext
     {
+        public BscDbContext(DbContextOptions<BscDbContext> options) : base(options)
+        {
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Type> Types { get; set; }
@@ -12,6 +15,7 @@ namespace bsc_be.Models
         public DbSet<GigType> GigTypes { get; set; }
         public DbSet<Item> Item { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -29,6 +33,32 @@ namespace bsc_be.Models
             modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique(true);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Password)
+                .IsUnique(true);
+            modelBuilder.Entity<Gig>()
+                .HasOne(g => g.User)
+                .WithMany(u => u.Gigs)
+                .HasForeignKey(g => g.UserId);
+            modelBuilder.Entity<GigType>()
+                .HasOne(gt => gt.Gig)
+                .WithMany()
+                .HasForeignKey(gt => gt.GigId);
+            modelBuilder.Entity<GigType>()
+                .HasOne(gt => gt.Type)
+                .WithMany()
+                .HasForeignKey(gt => gt.TypeId);
+            modelBuilder.Entity<Type>()
+                .HasIndex(t => t.Name)
+                .IsUnique(true);
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.BuyerId);
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.Gig)
+                .WithMany()
+                .HasForeignKey(t => t.GigId);
             modelBuilder.Entity<Transaction>()
             .HasOne<Rating>(t => t.Rating);
             modelBuilder.Entity<Transaction>()

@@ -18,5 +18,7 @@ namespace bsc_be.Models
         public decimal Price { get; set; } = 0;
         public ICollection<Transaction> Transactions = new List<Transaction>();
         public ICollection<GigType> GigType = new List<GigType>();
+
+        public User? User { get; set; }
     }
 }

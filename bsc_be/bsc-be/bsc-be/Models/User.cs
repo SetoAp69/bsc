@@ -17,7 +17,7 @@ namespace bsc_be.Models
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
 
-        public ICollection<Gig> Gigs = new List<Gig>();
+        public ICollection<Gig> Gigs { get; set; } = new List<Gig>();
         public ICollection<Transaction> Transactions = new List<Transaction>();
 
     }

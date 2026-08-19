@@ -1,4 +1,6 @@
 using bsc_be.Models;
+using bsc_be.Repositories;
+using bsc_be.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,10 +8,13 @@ var config = builder.Configuration;
 var connStr = config.GetConnectionString("BSC_DB");
 
 
-builder.Services.AddControllers();
 builder.Services.AddDbContext<BscDbContext>(
     opt => opt.UseNpgsql(connStr)
 );
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

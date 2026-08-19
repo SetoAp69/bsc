@@ -24,16 +24,14 @@ namespace bsc_be.Models
         [ForeignKey(nameof(Models.Rating))]
         public long RatingId { get; set; } = 0;
 
-        [Column("PAYMENT_METHOD")]
+        [Column("PAYMENT_METHOD_ID")]
         [ForeignKey(nameof(PaymentMethod))]
         public long PaymentMethodId { get; set; } = 0;
 
         [Column("TOTAL_PRICE")]
         public decimal TotalPrice { get; set; } = 0;
-        public DateTime date { get; set; } = DateTime.Now;
-        public string status { get; set; } = string.Empty;
-        public User? User { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
+        public User? User { get; set; }
 
         public Rating? Rating = null;
         public PaymentMethod? PaymentMethod = null;

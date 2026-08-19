@@ -26,7 +26,9 @@ namespace bsc_be.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            //Add relations here
+            modelBuilder.Entity<Transaction>()
+            .Property(t => t.Status)
+            .HasConversion<string>();
             modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique(true);

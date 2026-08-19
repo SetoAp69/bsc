@@ -7,22 +7,13 @@ namespace bsc_be.Services
 {
     class GigService : IGigService
     {
-        private readonly Repository<Gig> _gigRepository;
-        private readonly Repository<User> _userRepository;
-        private readonly Repository<Transaction> _transactionRepository;
-        private readonly Repository<Rating> _ratingRepository;
+        private readonly IRepository<Gig> _gigRepository;
 
         public GigService(
-            Repository<Gig> gigRepository,
-            Repository<User> userRepository,
-            Repository<Transaction> transactionRepository,
-            Repository<Rating> ratingRepository
+            IRepository<Gig> gigRepository
         )
         {
             _gigRepository = gigRepository;
-            _userRepository = userRepository;
-            _transactionRepository = transactionRepository;
-            _ratingRepository = ratingRepository;
         }
 
         public async Task<GigDetailResponse?> GetGigByIdAsync(long id)
@@ -30,7 +21,7 @@ namespace bsc_be.Services
             try
             {
                 var gig = await _gigRepository.GetByIdAsync(
-                  id, "Transaction.Rating", "GigTypes.Type"
+                  id, "Transactions.Rating", "GigTypes.Type", "User.Gigs"
                 );
                 return gig != null ? toGigDetailResponse(gig) : null;
             }
@@ -44,21 +35,28 @@ namespace bsc_be.Services
         {
             try
             {
-                var gigs = await _gigRepository.GetAllAsync();
+                var gigs = await _gigRepository.GetAllAsync("Transactions.Rating", "GigTypes.Type", "User.Gigs");
                 var searchQuery = queryParams.Search;
                 var typesFilter = queryParams.Types;
+                var userId = queryParams.UserId;
                 if (!searchQuery.IsNullOrEmpty())
                 {
                     gigs = gigs
                         .Where(g => g.Name.Contains(searchQuery!, StringComparison.OrdinalIgnoreCase))
                         .ToList();
                 }
-                //TODO Add filter by list type
-                // if (typesFilter.Count() > 0)
-                // // {
-                // //     gigs = gigs
-                // //         .Where(g=> g.GigTypes.Select(gt=>gt.Type))
-                // }
+                // TODO: refactor this
+                if (typesFilter.Count() > 0)
+                {
+                    gigs = gigs
+                        .Where(g => !typesFilter.Intersect(g.GigTypes.Select(gt => gt.Type.Name).ToList()).IsNullOrEmpty()).ToList();
+                }
+                if (userId != null)
+                {
+                    gigs = gigs
+                        .Where(g => g.UserId == userId)
+                        .ToList();
+                }
                 gigs.Skip((queryParams.Page - 1) * queryParams.Limit)
                     .Take(queryParams.Limit)
                     .ToList();
@@ -116,11 +114,12 @@ namespace bsc_be.Services
             var transactionsWithRating = gig
                 .Transactions
                 .Where(t => t.Rating != null);
-
+            var count = transactionsWithRating.Count();
+            if (count <= 0) return 0;
             decimal totalStarRating = transactionsWithRating
                     .Sum(t => t.Rating!.Star);
 
-            return totalStarRating / transactionsWithRating.Count();
+            return totalStarRating / count;
         }
 
     }

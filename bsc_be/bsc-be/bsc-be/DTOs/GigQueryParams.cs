@@ -2,11 +2,11 @@ namespace bsc_be.DTOs
 {
     public class GigQueryParams
     {
-        public string? Search = null;
-        public int Limit = 0;
-        public int Page = 1;
-        public long? UserId = null;
-        public List<string> Types = new List<string>();
+        public string? Search { get; set; }
+        public int Limit { get; set; }
+        public int Page { get; set; }
+        public long? UserId { get; set; }
+        public List<string> Types { get; set; } = [];
 
     }
 }

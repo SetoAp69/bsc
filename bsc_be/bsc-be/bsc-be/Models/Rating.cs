@@ -12,6 +12,6 @@ namespace bsc_be.Models
         public decimal Star { get; set; } = 0;
         [MaxLength(100)]
         public string Comment { get; set; } = string.Empty;
-        public Transaction? transaction = null;
+        public Transaction? transaction {get;set;} = null;
     }
 }

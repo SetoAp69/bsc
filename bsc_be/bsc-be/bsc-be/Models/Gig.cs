@@ -16,8 +16,8 @@ namespace bsc_be.Models
         public string Description { get; set; } = string.Empty;
         public int Duration { get; set; } = 0;
         public decimal Price { get; set; } = 0;
-        public ICollection<Transaction> Transactions = new List<Transaction>();
-        public ICollection<GigType> GigTypes = new List<GigType>();
+        public ICollection<Transaction> Transactions { set; get; } = new List<Transaction>();
+        public ICollection<GigType> GigTypes { set; get; } = new List<GigType>();
 
         public User User { get; set; } = new User();
     }

@@ -6,7 +6,7 @@ namespace bsc_be.DTOs
         public string Name { get; set; } =string.Empty;
         public decimal Price { get; set; } = 0;
         public decimal Stars { get; set; } = 0.0m;
-        public string GigCreator = string.Empty;
-        public List<string> Types = new List<string>();
+        public string GigCreator{get;set;} = string.Empty;
+        public List<string> Types{get;set;} = new List<string>();
     }
 }

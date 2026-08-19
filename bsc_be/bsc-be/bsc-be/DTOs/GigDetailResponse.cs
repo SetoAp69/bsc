@@ -8,8 +8,8 @@ namespace bsc_be.DTOs
         public int Duration { get; set; } = 0;
         public decimal Price { get; set; } = 0;
         public decimal Stars { get; set; } = 0;
-        public Creator GigCreator = new Creator();
-        public List<Type> Types = new List<Type>();
+        public Creator GigCreator{get;set;} = new Creator();
+        public List<Type> Types {get;set;}= new List<Type>();
 
         public class Creator
         {

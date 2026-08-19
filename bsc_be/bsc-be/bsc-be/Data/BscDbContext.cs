@@ -44,22 +44,22 @@ namespace bsc_be.Models
                 .HasForeignKey(g => g.UserId);
             modelBuilder.Entity<GigType>()
                 .HasOne(gt => gt.Gig)
-                .WithMany()
+                .WithMany(g=>g.GigTypes)
                 .HasForeignKey(gt => gt.GigId);
             modelBuilder.Entity<GigType>()
                 .HasOne(gt => gt.Type)
-                .WithMany()
+                .WithMany(t=>t.GigTypes)
                 .HasForeignKey(gt => gt.TypeId);
             modelBuilder.Entity<Type>()
                 .HasIndex(t => t.Name)
                 .IsUnique(true);
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.User)
-                .WithMany()
+                .WithMany(u=>u.Transactions)
                 .HasForeignKey(t => t.BuyerId);
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Gig)
-                .WithMany()
+                .WithMany(g=>g.Transactions)
                 .HasForeignKey(t => t.GigId);
             modelBuilder.Entity<Transaction>()
             .HasOne<Rating>(t => t.Rating);

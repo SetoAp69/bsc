@@ -14,7 +14,7 @@ namespace bsc_be.Models
         [Column("TYPE_ID")]
         [ForeignKey(nameof(Type))]
         public long TypeId { get; set; } = 0;
-        public Gig? Gig = null;
-        public Type? Type = null;
+        public Gig Gig {get;set;} = new Gig();
+        public Type Type {get;set;}= new Type();
     }
 }

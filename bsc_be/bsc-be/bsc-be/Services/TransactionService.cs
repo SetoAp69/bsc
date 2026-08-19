@@ -71,5 +71,23 @@ namespace bsc_be.Services
             }
 
         }
+        public async Task<TransactionResponse> UpdateTransactionStatusAsync(TransactionStatusRequest request)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+            {
+                throw new Exception("Transaction not found");
+            }
+            transaction.Status = Enum.Parse<Status>(request.Status);
+            await _transactionRepository.SaveChangesAsync();
+            return new TransactionResponse
+            {
+                Id = transaction.Id,
+                GigName = transaction.Gig?.Name ?? string.Empty,
+                TransactionStatus = transaction.Status.ToString(),
+                Date = transaction.Date,
+                TotalPrice = transaction.TotalPrice
+            };
+        }
     }
 }

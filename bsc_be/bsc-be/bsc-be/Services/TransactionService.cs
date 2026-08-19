@@ -89,5 +89,26 @@ namespace bsc_be.Services
                 TotalPrice = transaction.TotalPrice
             };
         }
+
+        public async Task<Boolean> DeleteTransactionAsync(long transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
+            if (transaction == null) return false;
+            await _transactionRepository.BeginTransactionAsync();
+            try
+            {
+                transaction.Status = Status.CANCELED;
+                _transactionRepository.Update(transaction);
+                await _transactionRepository.SaveChangesAsync();
+                await _transactionRepository.CommitTransactionAsync();
+                return true;
+            }
+            catch
+            {
+                await _transactionRepository.RollbackTransactionAsync();
+                return false;
+            }
+
+        }
     }
 }

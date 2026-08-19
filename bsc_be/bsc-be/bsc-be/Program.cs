@@ -15,6 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGigService, GigService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 
 builder.Services.AddDbContext<BscDbContext>(
     opt => opt.UseNpgsql(connStr)

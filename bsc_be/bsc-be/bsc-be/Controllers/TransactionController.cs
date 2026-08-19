@@ -7,9 +7,11 @@ namespace bsc_be.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
-        public TransactionController(ITransactionService transactionService)
+        private readonly IRatingService _ratingService;
+        public TransactionController(ITransactionService transactionService, IRatingService ratingService)
         {
             _transactionService = transactionService;
+            _ratingService = ratingService;
         }
         [HttpGet("api/transactions/{userId}")]
         public async Task<IActionResult> GetTransactions(int userId)
@@ -27,9 +29,10 @@ namespace bsc_be.Controllers
             try
             {
                 var transaction = await _transactionService.CreateTransactionAsync(request);
-                return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction});
+                return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
@@ -57,6 +60,20 @@ namespace bsc_be.Controllers
                     return Ok(new { status = "Success", message = "Transaction deleted successfully" });
                 else
                     return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "Error", message = ex.Message });
+            }
+        }
+
+        [HttpPut("api/transactions/rating")]
+        public async Task<IActionResult> UpdateTransactionRating([FromBody] TransactionRatingUpdateRequest request)
+        {
+            try
+            {
+                var rating = await _ratingService.UpdateRatingAsync(request);
+                return Ok(new { status = "Success", message = "Transaction rating updated successfully", rating = rating });
             }
             catch (Exception ex)
             {

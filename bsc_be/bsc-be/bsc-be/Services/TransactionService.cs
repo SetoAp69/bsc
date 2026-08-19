@@ -39,7 +39,7 @@ namespace bsc_be.Services
                 BuyerId = request.UserId,
                 GigId = request.GigId,
                 ItemId = request.ItemId,
-                Status = Status.ON_PROGRESS,
+                Status = Status.IN_PROGRESS,
                 Date = DateTime.UtcNow,
                 TotalPrice = request.TotalPrice,
                 PaymentMethodId = request.PaymentMethodId,
@@ -88,6 +88,27 @@ namespace bsc_be.Services
                 Date = transaction.Date,
                 TotalPrice = transaction.TotalPrice
             };
+        }
+
+        public async Task<Boolean> DeleteTransactionAsync(long transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
+            if (transaction == null) return false;
+            await _transactionRepository.BeginTransactionAsync();
+            try
+            {
+                transaction.Status = Status.CANCELED;
+                _transactionRepository.Update(transaction);
+                await _transactionRepository.SaveChangesAsync();
+                await _transactionRepository.CommitTransactionAsync();
+                return true;
+            }
+            catch
+            {
+                await _transactionRepository.RollbackTransactionAsync();
+                return false;
+            }
+
         }
     }
 }

@@ -47,5 +47,21 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
+        [HttpDelete("api/transactions/{transactionId}")]
+        public async Task<IActionResult> DeleteTransaction(int transactionId)
+        {
+            try
+            {
+                var isDeleteSuccess = await _transactionService.DeleteTransactionAsync(transactionId);
+                if (isDeleteSuccess)
+                    return Ok(new { status = "Success", message = "Transaction deleted successfully" });
+                else
+                    return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "Error", message = ex.Message });
+            }
+        }
     }
 }

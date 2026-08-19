@@ -8,16 +8,16 @@ var config = builder.Configuration;
 var connStr = config.GetConnectionString("BSC_DB");
 
 
-builder.Services.AddDbContext<BscDbContext>(
-    opt => opt.UseNpgsql(connStr)
-);
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITransactionService, TransactionService>();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IGigService, GigService>();
+
+builder.Services.AddDbContext<BscDbContext>(
+    opt => opt.UseNpgsql(connStr)
+);
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
 

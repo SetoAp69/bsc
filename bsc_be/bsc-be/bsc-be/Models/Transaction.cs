@@ -33,10 +33,10 @@ namespace bsc_be.Models
         public DateTime Date { get; set; } = DateTime.Now;
         public User? User { get; set; }
 
-        public Rating? Rating = null;
-        public PaymentMethod? PaymentMethod = null;
-        public Status Status { get; set; } = Status.ON_PROGRESS;
-        public Gig? Gig = null;
-        public Item? Item = null;
+        public Rating? Rating { get; set; } = null;
+        public PaymentMethod? PaymentMethod { get; set; } = null;
+        public Status Status { get; set; } = Status.IN_PROGRESS;
+        public Gig? Gig { get; set; } = null;
+        public Item? Item { get; set; } = null;
     }
 }

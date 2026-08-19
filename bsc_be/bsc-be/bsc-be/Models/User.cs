@@ -20,7 +20,7 @@ namespace bsc_be.Models
         public UserRole UserRole { get; set; } = UserRole.CUSTOMER;
 
         public ICollection<Gig> Gigs { get; set; } = new List<Gig>();
-        public ICollection<Transaction> Transactions = new List<Transaction>();
+        public ICollection<Transaction> Transactions  {get;set;}= new List<Transaction>();
 
     }
 }

@@ -8,9 +8,13 @@ namespace bsc_be.Models
     {
         [Key]
         public long Id { get; set; } = 0;
-        [ForeignKey("Gig")]
+        [Column("GIG_ID")]
+        [ForeignKey(nameof(Gig))]
         public long GigId { get; set; } = 0;
-        [ForeignKey("Type")]
+        [Column("TYPE_ID")]
+        [ForeignKey(nameof(Type))]
         public long TypeId { get; set; } = 0;
+        public Gig? Gig = null;
+        public Type? Type = null;
     }
 }

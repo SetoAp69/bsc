@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace bsc_be.Models
 {
-    [Table("PAYEMENT_METHOD")]
+    [Table("PAYMENT_METHOD")]
     public class PaymentMethod
     {
         [Key]

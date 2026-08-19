@@ -1,9 +1,18 @@
+using bsc_be.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
+var connStr = config.GetConnectionString;
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddDbContext<BscDbContext>(
+    opt => opt.UseNpgsql("BSC_TEST")
+);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

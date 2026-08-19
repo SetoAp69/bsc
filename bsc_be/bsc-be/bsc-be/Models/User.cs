@@ -16,6 +16,9 @@ namespace bsc_be.Models
         public string Password { get; set; } = string.Empty;
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
-        
+
+        public ICollection<Gig> Gigs = new List<Gig>();
+        public ICollection<Transaction> Transactions = new List<Transaction>();
+
     }
 }

@@ -25,7 +25,7 @@ namespace bsc_be.Services
             return transactions.Select(userTransaction => new TransactionResponse
             {
                 Id = userTransaction.Id,
-                GigName = userTransaction.Gig?.Name,
+                GigName = userTransaction.Gig.Name,
                 TransactionStatus = userTransaction.Status.ToString(),
                 Date = userTransaction.Date,
                 TotalPrice = userTransaction.TotalPrice

@@ -38,6 +38,9 @@ namespace bsc_be.Models
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Password)
                 .IsUnique(true);
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserRole)
+                .HasConversion<string>();
             modelBuilder.Entity<Gig>()
                 .HasOne(g => g.User)
                 .WithMany(u => u.Gigs)

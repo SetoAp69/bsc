@@ -20,7 +20,7 @@ namespace bsc_be.Models
         [ForeignKey(nameof(Item))]
         public long? ItemId { get; set; } = null;
 
-        [Column("RATTING_ID")]
+        [Column("RATING_ID")]
         [ForeignKey(nameof(Models.Rating))]
         public long RatingId { get; set; } = 0;
 

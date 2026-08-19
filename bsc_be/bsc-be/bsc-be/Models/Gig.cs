@@ -14,5 +14,7 @@ namespace bsc_be.Models
         public string Description { get; set; } = string.Empty;
         public int Duration { get; set; } = 0;
         public decimal Price { get; set; } = 0;
+
+        public User? User { get; set; }
     }
 }

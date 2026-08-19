@@ -12,5 +12,7 @@ namespace bsc_be.Models
         public long GigId { get; set; } = 0;
         [ForeignKey("Type")]
         public long TypeId { get; set; } = 0;
+        public Gig? Gig { get; set; }
+        public Type? Type { get; set; }
     }
 }

@@ -21,5 +21,7 @@ namespace bsc_be.Models
         public decimal TotalPrice { get; set; } = 0;
         public DateTime date { get; set; } = DateTime.Now;
         public string status { get; set; } = string.Empty;
+        public User? User { get; set; }
+        public Gig? Gig { get; set; }
     }
 }

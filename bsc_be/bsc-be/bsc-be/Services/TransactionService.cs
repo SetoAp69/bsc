@@ -39,7 +39,7 @@ namespace bsc_be.Services
                 BuyerId = request.UserId,
                 GigId = request.GigId,
                 ItemId = request.ItemId,
-                Status = Status.ON_PROGRESS,
+                Status = Status.IN_PROGRESS,
                 Date = DateTime.UtcNow,
                 TotalPrice = request.TotalPrice,
                 PaymentMethodId = request.PaymentMethodId,

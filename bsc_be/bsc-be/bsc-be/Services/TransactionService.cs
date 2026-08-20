@@ -16,7 +16,7 @@ namespace bsc_be.Services
         public async Task<TransactionResponse[]?> GetTransactionAsync(int userId)
         {
             var transactions = await _transactionRepository
-                .GetAllAsync("Gig");
+                .GetAllAsync("Gig", "Rating");
             if (transactions == null)
             {
                 return null;
@@ -28,17 +28,23 @@ namespace bsc_be.Services
                 GigName = userTransaction.Gig.Name,
                 TransactionStatus = userTransaction.Status.ToString(),
                 Date = userTransaction.Date,
-                TotalPrice = userTransaction.TotalPrice
+                TotalPrice = userTransaction.TotalPrice,
+                Rating = new RatingResponse
+                {
+                    Id = userTransaction.Rating.Id,
+                    Rating = userTransaction.Rating.Star,
+                    Comment = userTransaction.Rating.Comment
+                }
             }).ToArray();
         }
 
-        public async Task<TransactionResponse> CreateTransactionAsync(TransactionRequest request)
+        public async Task<Boolean> CreateTransactionAsync(TransactionRequest request, long itemId)
         {
             var transaction = new Transaction
             {
                 BuyerId = request.UserId,
                 GigId = request.GigId,
-                ItemId = request.ItemId,
+                ItemId = itemId,
                 Status = Status.IN_PROGRESS,
                 Date = DateTime.UtcNow,
                 TotalPrice = request.TotalPrice,
@@ -55,14 +61,7 @@ namespace bsc_be.Services
                 await _transactionRepository.AddAsync(transaction);
                 await _transactionRepository.SaveChangesAsync();
                 await _transactionRepository.CommitTransactionAsync();
-                return new TransactionResponse
-                {
-                    Id = transaction.Id,
-                    GigName = transaction.Gig?.Name ?? string.Empty,
-                    TransactionStatus = transaction.Status.ToString(),
-                    Date = transaction.Date,
-                    TotalPrice = transaction.TotalPrice
-                };
+                return true;
             }
             catch (Exception)
             {

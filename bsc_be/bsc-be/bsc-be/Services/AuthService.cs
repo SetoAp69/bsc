@@ -47,6 +47,12 @@ namespace bsc_be.Services
             {
                 Jwt = new JwtSecurityTokenHandler().WriteToken(token),
                 Status = "Success",
+                User = new UserSummary
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                }
             };
         }
     }

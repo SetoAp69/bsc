@@ -1,5 +1,6 @@
 ﻿using bsc_be.DTOs;
 using bsc_be.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bsc_be.Controllers
@@ -13,6 +14,7 @@ namespace bsc_be.Controllers
             _transactionService = transactionService;
             _ratingService = ratingService;
         }
+        [Authorize]
         [HttpGet("api/transactions/{userId}")]
         public async Task<IActionResult> GetTransactions(int userId)
         {
@@ -23,6 +25,7 @@ namespace bsc_be.Controllers
             }
             return Ok(transactions);
         }
+        [Authorize]
         [HttpPost("api/transactions")]
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionRequest request)
         {
@@ -37,6 +40,7 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
+        [Authorize]
         [HttpPut("api/transactions/status")]
         public async Task<IActionResult> UpdateTransactionStatus([FromBody] TransactionStatusRequest request)
         {
@@ -50,6 +54,7 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
+        [Authorize]
         [HttpDelete("api/transactions/{transactionId}")]
         public async Task<IActionResult> DeleteTransaction(int transactionId)
         {
@@ -66,7 +71,7 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
-
+        [Authorize]
         [HttpPut("api/transactions/rating")]
         public async Task<IActionResult> UpdateTransactionRating([FromBody] TransactionRatingUpdateRequest request)
         {

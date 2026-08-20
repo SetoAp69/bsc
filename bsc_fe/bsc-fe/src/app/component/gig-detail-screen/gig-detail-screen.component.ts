@@ -5,7 +5,7 @@ import { GigService } from '../../services/gig.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RatingCommentComponent } from "../rating-comment/rating-comment.component";
-import { GigDetailRatingCommentComponent } from "../gig-detail-rating-comment/gig-detail-rating-comment.component";
+import { GigDetailRatingCommentComponent } from '../gig-detail-rating-comment/gig-detail-rating-comment.component';
 
 @Component({
   selector: 'app-gig-detail-screen',

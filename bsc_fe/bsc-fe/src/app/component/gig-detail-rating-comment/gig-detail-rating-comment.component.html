@@ -1,0 +1,17 @@
+<div class="p-4 shadow-sm bg-light-subtle rounded-4">
+  <h2 class="text-primary fs-4 fw-bold mb-lg-4">Ratings and Comments</h2>
+  <div class="d-flex flex-column gap-1">
+    @if (isLoading) {
+      <p>LOADING</p>
+    } @else {
+      @for (rating of ratings; track $index) {
+        <app-rating-comment [rating]="rating"> </app-rating-comment>
+        <app-rating-comment [rating]="rating"> </app-rating-comment>
+        <app-rating-comment [rating]="rating"> </app-rating-comment>
+        <app-rating-comment [rating]="rating"> </app-rating-comment>
+      } @empty {
+        <p>No Data</p>
+      }
+    }
+  </div>
+</div>

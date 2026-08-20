@@ -4,6 +4,6 @@ namespace bsc_be.Services
 {
     public interface IItemService
     {
-        Task<ItemResponse?> CreateItemAsync(string itemName);
+        Task<ItemResponse?> CreateItemAsync(ItemRequest request);
     }
 }

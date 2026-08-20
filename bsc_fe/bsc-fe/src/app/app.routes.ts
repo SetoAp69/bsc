@@ -18,5 +18,5 @@ export const routes: Routes = [
       path: 'gig/:id',
       component: GigDetailScreenComponent,
     },
-    { path: '**', redirectTo: '/not-found' }
-]
+    // { path: '**', redirectTo: '/not-found' }
+  ]

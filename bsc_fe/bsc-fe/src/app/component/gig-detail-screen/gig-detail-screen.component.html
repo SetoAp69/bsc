@@ -96,7 +96,7 @@
       <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 1.5rem; z-index: 1;">
         <div class="d-flex justify-content-between align-items-baseline mb-3">
           <span class="text-muted small fw-medium">Price</span>
-          <span class="fs-2 fw-bold text-success">{{ gigDetail.price | currency }}</span>
+          <span class="fs-2 fw-bold text-success">{{ totalPrice | currency }}</span>
         </div>
 
         <hr class="text-muted opacity-25 my-2" />
@@ -104,9 +104,29 @@
         <div class="d-flex align-items-center gap-2 text-secondary my-3 fs-6">
           <i class="bi bi-clock-history fs-5 text-primary"></i>
           <span>Delivery Time: <strong>{{ gigDetail.duration }} Day(s)</strong></span>
+          <div class="dropdown ms-auto">
+            <button
+              class="btn btn-sm btn-outline-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ paymentMethodButtonText }}
+            </button>
+            <ul class="dropdown-menu shadow-sm">
+              @for (p of paymentMethods; track $index) {
+                <li (click)="onPaymentMethodSelected(p)">
+                  <a class="dropdown-item">
+                    {{ p.name }} ({{ p.rate | percent:'1.0-2' }})
+                  </a>
+                </li>
+              }
+            </ul>
+
+          </div>
         </div>
 
-        <button class="btn btn-primary btn-lg w-100 fw-bold rounded-3 shadow-sm mt-2" type="button">
+        <button class="btn btn-primary btn-lg w-100 fw-bold rounded-3 shadow-sm mt-2" type="button" (click)="onOrderNow()">
           Order Now
         </button>
 

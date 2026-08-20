@@ -3,7 +3,7 @@
         class="table-responsive m-4"
     >
         <table
-            class="table table-striped table-hover table-borderless table-primary align-middle"
+            class="table table-striped table-hover table-bordered table-primary align-middle rounded shadow-sm"
         >
             <thead class="table-light">
                 <caption>
@@ -43,6 +43,7 @@
 }
 
 @if (isShowEditRating) {
+    <div class="modal-backdrop fade show"></div>
     <div class="modal fade show d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

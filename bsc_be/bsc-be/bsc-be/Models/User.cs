@@ -17,10 +17,15 @@ namespace bsc_be.Models
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
 
+        [MaxLength(255)]
+        public string? About { get; set; } = null;
+        [MaxLength(100)]
+        public string? Location { get; set; } = null;
+
         public UserRole UserRole { get; set; } = UserRole.CUSTOMER;
 
         public ICollection<Gig> Gigs { get; set; } = new List<Gig>();
-        public ICollection<Transaction> Transactions  {get;set;}= new List<Transaction>();
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     }
 }

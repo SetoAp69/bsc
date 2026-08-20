@@ -1,3 +1,4 @@
+using bsc_be;
 using bsc_be.Middlewares;
 using bsc_be.Models;
 using bsc_be.Repositories;
@@ -17,6 +18,7 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<BscDbContext>(
     opt => opt.UseNpgsql(connStr)
@@ -25,7 +27,7 @@ builder.Services.AddDbContext<BscDbContext>(
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
-app.UseMiddleware<GlobalExceptionMiddleware>();
+// app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

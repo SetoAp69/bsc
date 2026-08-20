@@ -1,11 +1,27 @@
-<p>login-page works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="OnSubmit()" class="bg-light p-4 rounded shadow-sm mt-5" style="max-width: 400px; margin: auto;">
+  <div class="form-floating mb-3">
+    <input
+      type="text"
+      class="form-control"
+      name="username"
+      id="username"
+      placeholder="Input your name"
+      formControlName="username"
+    />
+    <label for="username">Name</label>
+  </div>
 
-<form [formGroup]="loginForm" (ngSubmit)="OnSubmit()">
-  <label for="username">Username:</label>
-  <input type="text" id="username" formControlName="username" required>
+  <div class="form-floating mb-3">
+    <input
+      type="password"
+      class="form-control"
+      name="password"
+      id="password"
+      placeholder="Input your password"
+      formControlName="password"
+    />
+    <label for="password">Password</label>
+  </div>
 
-  <label for="password">Password:</label>
-  <input type="password" id="password" formControlName="password" required>
-
-  <button type="submit">Login</button>
+  <button type="submit" [disabled]="loginForm.invalid" class = "btn btn-primary w-100">Login</button>
 </form>

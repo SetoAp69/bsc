@@ -1,5 +1,5 @@
 export interface TransactionRatingRequest {
-    transactionId: number;
-    ratingStar: number;
+    ratingId: number;
+    starRating: number;
     comment: string;
 }

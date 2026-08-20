@@ -7,6 +7,7 @@ import { TransactionStatus } from '../enums/transaction-status';
 import { TransactionStatusRequest } from '../interfaces/transaction-status-request';
 import { TransactionRequest } from '../interfaces/transaction-request';
 import { TransactionRatingRequest } from '../interfaces/transaction-rating-request';
+import { Rating } from '../interfaces/rating';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,11 @@ export class TransactionService {
   addNewTransaction(request: TransactionRequest) {
     return this.http.post(`${environment.apiUrl}/transactions`, request);
   }
-  changeTransactionStatus(request: TransactionStatusRequest) {
+  updateTransactionStatus(request: TransactionStatusRequest) {
     return this.http.put(`${environment.apiUrl}/transactions/status`, request);
   }
-  changeTransactionRating(request: TransactionRatingRequest) {
-    return this.http.put(`${environment.apiUrl}/transactions/rating`, request);
+  updateTransactionRating(request: TransactionRatingRequest) {
+    return this.http.put<Rating>(`${environment.apiUrl}/transactions/rating`, request);
   }
   deleteTransaction(transactionId: number) {
     return this.http.delete(`${environment.apiUrl}/transactions/${transactionId}`);

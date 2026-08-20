@@ -1,6 +1,6 @@
 @if (transactionList) {
     <div
-        class="table-responsive"
+        class="table-responsive m-4"
     >
         <table
             class="table table-striped table-hover table-borderless table-primary align-middle"
@@ -15,6 +15,7 @@
                     <th>Status</th>
                     <th>Total Price</th>
                     <th>Date</th>
+                    <th>Rating</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -27,6 +28,10 @@
                         <td>{{ transaction.transactionStatus | titlecase }}</td>
                         <td>{{ transaction.totalPrice }}</td>
                         <td>{{ transaction.date }}</td>
+                        <td>
+                            <span class="badge bg-primary">{{ transaction.rating.rating | number:'1.1-1' }}</span>
+                            <span class="badge bg-secondary ms-2 user-select-none" (click)="showEditRating(transaction)">Edit</span>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -34,5 +39,24 @@
                 
             </tfoot>
         </table>
+    </div>
+}
+
+@if (isShowEditRating) {
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Rating</h5>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="isShowEditRating = false"></button>
+                </div>
+                <div class="modal-body">
+                    <app-edit-rating
+                        [initialRating]="selectedTransaction?.rating || null"
+                        (ratingChanged)="onRatingChanged($event)"
+                    ></app-edit-rating>
+                </div>
+            </div>
+        </div>
     </div>
 }

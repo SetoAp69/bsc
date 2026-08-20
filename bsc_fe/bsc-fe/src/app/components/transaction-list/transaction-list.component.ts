@@ -3,11 +3,14 @@ import { TransactionService } from '../../services/transaction.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TransactionResponse } from '../../interfaces/transaction-response';
+import { TransactionRatingRequest } from '../../interfaces/transaction-rating-request';
+import { EditRatingComponent } from '../edit-rating/edit-rating.component';
+import { Rating } from '../../interfaces/rating';
 
 @Component({
   selector: 'app-transaction-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EditRatingComponent],
   templateUrl: './transaction-list.component.html',
   styleUrl: './transaction-list.component.css'
 })
@@ -15,6 +18,8 @@ export class TransactionListComponent implements OnInit {
   route = inject(ActivatedRoute);
   transactionService = inject(TransactionService);
   transactionList: TransactionResponse[] = [];
+  isShowEditRating: boolean = false;
+  selectedTransaction: TransactionResponse | null = null;
   ngOnInit(): void {
     const userId = Number(this.route.snapshot.paramMap.get('userId'));
     this.transactionService.getTransactionsByUserId(userId).subscribe((transactions) => {
@@ -23,6 +28,35 @@ export class TransactionListComponent implements OnInit {
       });
       this.transactionList = transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     });
+  }
+
+  showEditRating(transaction: TransactionResponse): void {
+    this.isShowEditRating = true;
+    this.selectedTransaction = transaction;
+  }
+
+  onRatingChanged(newRating: Rating): void {
+    console.log('New rating received:', newRating);
+    if (this.selectedTransaction !== null) {
+      var ratingId = this.selectedTransaction.rating?.id || null;
+      const request: TransactionRatingRequest = {
+        ratingId: ratingId || 0,
+        starRating: newRating.rating,
+        comment: newRating.comment
+      };
+      this.transactionService.updateTransactionRating(request).subscribe({
+        next: () => {
+          this.transactionList = this.transactionList.map((transaction) => {
+            if (transaction.id === this.selectedTransaction?.id) {
+              return { ...transaction, rating: newRating };
+            }
+            return transaction;
+          });
+          this.isShowEditRating = false;
+          this.selectedTransaction = null;
+        }
+      });
+    }
   }
 }
 

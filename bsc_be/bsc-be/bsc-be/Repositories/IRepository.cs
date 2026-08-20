@@ -6,6 +6,7 @@ namespace bsc_be.Repositories
         Task<List<T>> GetAllAsync(params string[] includeProperties);
 
         Task AddAsync(T entity);
+        Task<T?> AddAsyncThenGet(T entity);
         void Update(T entity);
         void Delete(T entity);
         Task<int> SaveChangesAsync();

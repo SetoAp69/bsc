@@ -2,15 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { GigDetail, GigRating } from '../../interface/gig.interface';
 import { GigService } from '../../services/gig.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RatingCommentComponent } from "../rating-comment/rating-comment.component";
 import { GigDetailRatingCommentComponent } from "../gig-detail-rating-comment/gig-detail-rating-comment.component";
 
 @Component({
   selector: 'app-gig-detail-screen',
   standalone: true,
-  imports: [CommonModule, RatingCommentComponent, GigDetailRatingCommentComponent],
+  imports: [CommonModule, GigDetailRatingCommentComponent, RouterLink],
   templateUrl: './gig-detail-screen.component.html',
   styleUrl: './gig-detail-screen.component.css',
 })

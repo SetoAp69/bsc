@@ -1,0 +1,13 @@
+import { Component } from '@angular/core';
+import { GigListComponent } from "../gig-list/gig-list.component";
+
+@Component({
+  selector: 'app-dashboard-screen',
+  standalone: true,
+  imports: [GigListComponent],
+  templateUrl: './dashboard-screen.component.html',
+  styleUrl: './dashboard-screen.component.css'
+})
+export class DashboardScreenComponent {
+
+}

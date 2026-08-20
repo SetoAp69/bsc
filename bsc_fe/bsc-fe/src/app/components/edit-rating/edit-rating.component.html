@@ -1,0 +1,28 @@
+<form [formGroup]="editRatingForm" (ngSubmit)="onSubmit()">
+    form
+  <div class="form-floating mb-3">
+    <input
+      type="number"
+      class="form-control"
+      name="rating"
+      id="rating"
+      formControlName="rating"
+      placeholder=""
+    />
+    <label for="rating">Rating</label>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input
+      type="text"
+      class="form-control"
+      name="comment"
+      id="comment"
+      formControlName="comment"
+      placeholder=""
+    />
+    <label for="comment">Comment</label>
+  </div>
+
+  <button type="submit" [disabled]="editRatingForm.invalid" class = "btn btn-primary w-100">Submit</button>
+</form>

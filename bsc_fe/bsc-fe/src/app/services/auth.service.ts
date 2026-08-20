@@ -26,7 +26,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     const loginData = { username, password };
-    return this.http.post<{ token: string; user: User }>(`${environment.apiUrl}/auth/login`, loginData);
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/login`, loginData);
   }
 }
 
@@ -34,4 +34,9 @@ interface User {
   id: number;
   name: string;
   email: string;
+}
+
+interface LoginResponse {
+  jwt: string;
+  user: User;
 }

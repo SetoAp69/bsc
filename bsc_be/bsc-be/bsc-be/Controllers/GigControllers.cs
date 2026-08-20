@@ -26,7 +26,15 @@ namespace bsc_be.Controllers
         {
             var gig = await _gigService.GetGigByIdAsync(id);
             if (gig == null) return NotFound();
+
             return Ok(gig);
+        }
+        [HttpGet("{id:long}/ratings")]
+        public async Task<IActionResult> GetGigRatings(long id)
+        {
+            var ratings = await _gigService.GetGigRatingAsync(id);
+            if (ratings == null) return NotFound();
+            return Ok(ratings);
         }
     }
 }

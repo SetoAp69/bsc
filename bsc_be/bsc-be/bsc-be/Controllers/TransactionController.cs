@@ -32,7 +32,14 @@ namespace bsc_be.Controllers
             try
             {
                 var transaction = await _transactionService.CreateTransactionAsync(request);
-                return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });
+                if (transaction)
+                {
+                    return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });
+                }
+                else
+                {
+                    return BadRequest(new { status = "Error", message = "Creation failed" });
+                }
 
             }
             catch (Exception ex)

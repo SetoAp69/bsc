@@ -9,10 +9,12 @@ namespace bsc_be.Controllers
     {
         private readonly ITransactionService _transactionService;
         private readonly IRatingService _ratingService;
-        public TransactionController(ITransactionService transactionService, IRatingService ratingService)
+        private readonly IItemService _itemService;
+        public TransactionController(ITransactionService transactionService, IRatingService ratingService, IItemService itemService)
         {
             _transactionService = transactionService;
             _ratingService = ratingService;
+            _itemService = itemService;
         }
         [Authorize]
         [HttpGet("api/transactions/{userId}")]
@@ -31,7 +33,9 @@ namespace bsc_be.Controllers
         {
             try
             {
-                var transaction = await _transactionService.CreateTransactionAsync(request);
+                var newItem = await CreateItem(request.ItemName);
+                if (newItem == null) return BadRequest(new { status = "Error", message = "Creation failed" });
+                var transaction = await _transactionService.CreateTransactionAsync(request, newItem.Id);
                 if (transaction)
                 {
                     return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });
@@ -91,6 +95,11 @@ namespace bsc_be.Controllers
             {
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
+        }
+
+        private async Task<ItemResponse?> CreateItem(string itemName)
+        {
+            return await _itemService.CreateItemAsync(itemName);
         }
     }
 }

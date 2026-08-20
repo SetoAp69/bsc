@@ -22,6 +22,13 @@ namespace bsc_be.Repositories
             await _dbSet.AddAsync(entity);
         }
 
+        public async Task<T?> AddAsyncThenGet(T entity)
+        {
+            var entry = await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            return entry.Entity;
+        }
         public async Task BeginTransactionAsync()
         {
             if (_transaction == null)

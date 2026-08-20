@@ -38,13 +38,13 @@ namespace bsc_be.Services
             }).ToArray();
         }
 
-        public async Task<Boolean> CreateTransactionAsync(TransactionRequest request)
+        public async Task<Boolean> CreateTransactionAsync(TransactionRequest request, long itemId)
         {
             var transaction = new Transaction
             {
                 BuyerId = request.UserId,
                 GigId = request.GigId,
-                ItemId = request.ItemId,
+                ItemId = itemId,
                 Status = Status.IN_PROGRESS,
                 Date = DateTime.UtcNow,
                 TotalPrice = request.TotalPrice,

@@ -36,7 +36,7 @@ namespace bsc_be.Models
         public Rating? Rating { get; set; } = null;
         public PaymentMethod? PaymentMethod { get; set; } = null;
         public Status Status { get; set; } = Status.IN_PROGRESS;
-        public Gig Gig { get; set; } = new Gig();
+        public Gig? Gig { get; set; }
         public Item? Item { get; set; } = null;
     }
 }

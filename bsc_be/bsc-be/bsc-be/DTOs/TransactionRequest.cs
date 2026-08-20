@@ -10,6 +10,7 @@ namespace bsc_be.DTOs
         public long GigId { get; set; }
         [Required(ErrorMessage = "ItemId is required.")]
         public string ItemName { get; set; } = string.Empty;
+        public string ItemDescription { get; set; } = string.Empty;
         public long RatingId { get; set; }
         [Required(ErrorMessage = "PaymentMethodId is required.")]
         public long PaymentMethodId { get; set; }

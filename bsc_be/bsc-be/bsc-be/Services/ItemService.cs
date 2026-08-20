@@ -12,11 +12,12 @@ namespace bsc_be.Services
         {
             _itemRepository = itemRepository;
         }
-        public async Task<ItemResponse?> CreateItemAsync(string itemName)
+        public async Task<ItemResponse?> CreateItemAsync(ItemRequest request)
         {
             var item = new Item
             {
-                Name = itemName,
+                Name = request.Name,
+                Description = request.Description,
                 Path = string.Empty
             };
             try

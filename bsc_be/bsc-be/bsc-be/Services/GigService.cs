@@ -1,3 +1,4 @@
+using System.Globalization;
 using bsc_be.DTOs;
 using bsc_be.Models;
 using bsc_be.Repositories;
@@ -37,7 +38,7 @@ namespace bsc_be.Services
             {
                 var gigs = await _gigRepository.GetAllAsync("Transactions.Rating", "GigTypes.Type", "User.Gigs");
                 var searchQuery = queryParams.Search;
-                var typesFilter = queryParams.Types;
+                var typesFilter = queryParams.Types.ToHashSet();
                 var userId = queryParams.UserId;
                 if (!searchQuery.IsNullOrEmpty())
                 {
@@ -49,7 +50,10 @@ namespace bsc_be.Services
                 if (typesFilter.Count() > 0)
                 {
                     gigs = gigs
-                        .Where(g => !typesFilter.Intersect(g.GigTypes.Select(gt => gt.Type.Name).ToList()).IsNullOrEmpty()).ToList();
+                        .Where(g =>
+                            g.GigTypes.Any(gt => typesFilter.Contains(gt.Type.Name))
+                        )
+                        .ToList();
                 }
                 if (userId != null)
                 {
@@ -69,6 +73,17 @@ namespace bsc_be.Services
             }
         }
 
+        public async Task<List<GigRatingResponse>?> GetGigRatingAsync(long id)
+        {
+            var gig = await _gigRepository.GetByIdAsync(id, "Transactions.Rating", "Transactions.User");
+            if (gig == null) return null;
+            var ratings = gig
+            .Transactions
+            .Where(t => t.Rating != null)
+            .Select(t => toGigRatingResponse(t))
+            .ToList();
+            return ratings;
+        }
         public GigDetailResponse toGigDetailResponse(Gig gig)
         {
             return new GigDetailResponse
@@ -122,5 +137,15 @@ namespace bsc_be.Services
             return totalStarRating / count;
         }
 
+        private GigRatingResponse toGigRatingResponse(Transaction transaction)
+        {
+            return new GigRatingResponse
+            {
+                Id = transaction.Rating!.Id,
+                userName = transaction.User!.Username,
+                Rating = transaction.Rating!.Star,
+                Comment = transaction.Rating!.Comment,
+            };
+        }
     }
 }

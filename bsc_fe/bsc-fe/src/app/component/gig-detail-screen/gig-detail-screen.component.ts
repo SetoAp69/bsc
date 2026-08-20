@@ -50,18 +50,4 @@ export class GigDetailScreenComponent implements OnInit {
       },
     });
   }
-  // fetchRatings(id: number) {
-  //   this.isRatingsLoading = true;
-  //   this.gigService.getGigRatings(id).subscribe({
-  //     next: (res) => {
-  //       this.isDetailLoading = false;
-  //       this.isDetailFailed = false;
-  //       this.ratings = res;
-  //     },
-  //     error: (res) => {
-  //       this.isDetailFailed = true;
-  //       // this.ratings = 
-  //     }
-  //   });
-  // }
 }

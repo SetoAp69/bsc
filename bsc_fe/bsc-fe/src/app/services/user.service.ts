@@ -5,19 +5,12 @@ import { Observable } from 'rxjs';
 import { User } from '../interface/user.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  http = inject(HttpClient);
-  constructor() { }
-
-  getUserById(userId: number) {
-    return this.http.get<UserResponse>(`/api/users/${userId}`);
+  private baseUrl = `${environment.apiUrl}/user`;
+  private httpclient = inject(HttpClient);
+  getUserProfile(id: number): Observable<User> {
+    return this.httpclient.get<User>(`${this.baseUrl}/${id}`);
   }
-}
-
-interface UserResponse {
-  id: number;
-  name: string;
-  email: string;
 }

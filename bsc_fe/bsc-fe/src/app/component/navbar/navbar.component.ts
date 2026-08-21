@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, User } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,13 +10,19 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
   private route = inject(Router);
-  userId = this.authService.getUserId();
+  user: User | null = null;
 
+  ngOnInit(): void {
+    this.user = this.authService.getUser()
+  }
   onLogout() {
     this.authService.logout();
     this.route.navigate(['login']);
+  }
+  onGetId():number|null{
+    return this.authService.getUserId()
   }
 }

@@ -31,6 +31,7 @@ export const routes: Routes = [
   },
   {
     path: 'gig/:gigId',
+    canActivate :[authGuard],
     component: GigDetailScreenComponent,
     children: [
       {
@@ -45,6 +46,7 @@ export const routes: Routes = [
   },
   {
     path: 'profile/:id',
+    canActivate :[authGuard],
     component: ProfileScreenComponent,
   },
   {
@@ -52,5 +54,4 @@ export const routes: Routes = [
     component: OrderScreenComponent,
   },
   { path: '**', redirectTo: '/not-found' },
-  // { path: '**', redirectTo: '/not-found' }
 ];

@@ -25,7 +25,7 @@ export class AuthService {
       )
       .subscribe({
         next: (e) => {
-          this.localUserSubject.next(JSON.parse(e ?? '') as User);
+          this.localUserSubject.next(parseUserFromJson(e??''));
         },
       });
   }
@@ -35,13 +35,8 @@ export class AuthService {
   }
 
   getUser(): User | null {
-    try{
-      const stringifyUser = localStorage.getItem(this.userKey)??'';
-      const user: User = JSON.parse(stringifyUser) as User;
-      return user;
-    }catch(e :any){
-      return null
-    }
+    const stringifyUser = localStorage.getItem(this.userKey) ?? '';
+    return parseUserFromJson(stringifyUser);
   }
 
   getUserId(): number | null {
@@ -83,6 +78,13 @@ export class AuthService {
   }
 }
 
+function parseUserFromJson(stringifyUser: string): User | null {
+  try {
+    return JSON.parse(stringifyUser) as User;
+  } catch {
+    return null;
+  }
+}
 export interface User {
   id: number;
   name: string;

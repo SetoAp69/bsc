@@ -6,7 +6,7 @@
     <div class="text-white d-flex flex-row gap-4">
       <a class="navbar-nav text-white" routerLink="/dashboard">Dashboard</a>
       <a class="navbar-nav text-white" routerLink="/transactions">Transactions</a>
-      <a class="navbar-nav text-white" [routerLink]="'/profile/'+userId">Profile</a>
+      <a class="navbar-nav text-white" [routerLink]="'/profile/'+onGetId()">Profile</a>
       <a class="navbar-nav text-white" (click)="onLogout()">Logout</a>
     </div>
   </div>

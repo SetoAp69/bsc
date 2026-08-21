@@ -27,7 +27,7 @@ export class LoginPageComponent {
       next: (response) => {
         const token = response.jwt;
         this.authService.handleLoggedIn(response.user, token);
-        this.router.navigate([`/transactions/${this.authService.getUserId()}`]);
+        this.router.navigate([`/dashboard`]);
       },
       error: (error) => {
         console.error('Login failed:', error);

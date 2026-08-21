@@ -16,6 +16,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardScreenComponent,
+<<<<<<< HEAD
   },
   {
     path: 'gig/:id',
@@ -35,3 +36,12 @@ export const routes: Routes = [
   },
   { path: '**', redirectTo: '/not-found' },
 ];
+=======
+    },
+    {
+      path: 'gig/:id',
+      component: GigDetailScreenComponent,
+    },
+    // { path: '**', redirectTo: '/not-found' }
+  ]
+>>>>>>> main

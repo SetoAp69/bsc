@@ -98,6 +98,7 @@ export class GigDetailScreenComponent implements OnInit {
   onOrderNow() {
     if (!this.validatePayment()) return;
     try {
+      console.log(this.authService.getUserId())
       this.transactionService
         .addNewTransaction({
           userId: this.authService.getUserId() ?? 0,

@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { UserRole } from '../enums/role';
+import { UserRole } from '../enums/user-role';
+import { filter, fromEvent, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,24 +11,47 @@ import { UserRole } from '../enums/role';
 export class AuthService {
   http = inject(HttpClient);
   private tokenKey = 'auth_token';
+  private userKey = 'user_data';
   private currentUserObject = new BehaviorSubject<User | null>(null);
-  constructor() {}
+  private localUserSubject = new BehaviorSubject<User | null>(null);
 
-  currentUser$ = this.currentUserObject.asObservable();
-
+  constructor() {
+    fromEvent<StorageEvent>(window, 'storage')
+      .pipe(
+        filter(
+          (event) =>
+            event.storageArea === localStorage && event.key == this.userKey,
+        ),
+        map((event) => event.newValue),
+      )
+      .subscribe({
+        next: (e) => {
+          this.localUserSubject.next(JSON.parse(e ?? '') as User);
+        },
+      });
+  }
+  // currentUser$ = this.currentUserObject.asObservable();
+  currentUser$ = this.localUserSubject.asObservable();
   setUser(user: User | null): void {
-    this.currentUserObject.next(user);
-    console.log(user);
+    localStorage.setItem(
+      this.userKey,
+      JSON.stringify(user),
+    );
+    // this.currentUserObject.next(user);
   }
 
   getUser(): User | null {
-    return this.currentUserObject.value;
+    const user: User = JSON.parse(
+      localStorage.getItem(this.userKey) ?? '',
+    ) as User;
+    return user;
   }
 
   getUserId(): number | null {
     const user = this.getUser();
     return user ? user.id : null;
   }
+
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
@@ -39,6 +63,7 @@ export class AuthService {
     return !!token;
   }
   logout(): void {
+    localStorage.removeItem(this.userKey);
     localStorage.removeItem(this.tokenKey);
   }
 

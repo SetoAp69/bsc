@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, Input, input, OnInit } from '@angular/core';
 import { GigService } from '../../../services/gig.service';
 import { Gig } from '../../../interface/gig.interface';
 import { GigQueryParam } from '../../../interface/gig-query-params.interface';
@@ -17,6 +17,7 @@ import { RouterLink } from '@angular/router';
 })
 export class GigListComponent implements OnInit {
   private gigService = inject(GigService);
+  @Input() userId: number |null = null 
   isLoading = false;
   showFilter = false;
   filterOptions: string[] = [
@@ -27,6 +28,7 @@ export class GigListComponent implements OnInit {
   gigs: Gig[] = [];
 
   ngOnInit(): void {
+    this.queryParams.UserId = this.userId
     this.fetchGigList();
   }
 
@@ -34,7 +36,7 @@ export class GigListComponent implements OnInit {
     Search: null,
     Limit: null,
     Page: null,
-    UserId: null,
+    UserId: this.userId,
     Types: [],
   };
 

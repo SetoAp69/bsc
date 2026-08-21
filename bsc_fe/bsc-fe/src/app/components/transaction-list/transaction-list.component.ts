@@ -102,7 +102,10 @@ export class TransactionListComponent implements OnInit {
   }
 
   canEditRating(transaction: TransactionResponse): boolean {
-    return transaction.transactionStatus === TransactionStatus.COMPLETED;
+    return (
+      transaction.transactionStatus === TransactionStatus.COMPLETED &&
+      this.userRole === UserRole.CUSTOMER
+    );
   }
 
   isServiceProvider(): boolean {

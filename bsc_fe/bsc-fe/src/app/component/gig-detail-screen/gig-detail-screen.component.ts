@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GigDetail, GigRating } from '../../interface/gig.interface';
 import { GigService } from '../../services/gig.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GigDetailRatingCommentComponent } from '../gig-detail-rating-comment/gig-detail-rating-comment.component';
 import { PaymentMethodService } from '../../services/payment-method.service';
@@ -20,7 +20,8 @@ import { UserRole } from '../../enums/user-role';
     RouterLink,
     ɵInternalFormsSharedModule,
     FormsModule,
-  ],
+    RouterOutlet
+],
   templateUrl: './gig-detail-screen.component.html',
   styleUrl: './gig-detail-screen.component.css',
 })
@@ -38,7 +39,7 @@ export class GigDetailScreenComponent implements OnInit {
 
   isCustommer = this.authService.getUser()?.userRole == UserRole.CUSTOMER;
   description = '';
-  id = +(this.route.snapshot.paramMap.get('id') ?? '');
+  id = +(this.route.snapshot.paramMap.get('gigId') ?? '');
   isDetailFailed = false;
   isDetailLoading = false;
   isRatingsLoading = false;

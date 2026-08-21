@@ -1,4 +1,5 @@
 ﻿using bsc_be.DTOs;
+using bsc_be.Exceptions;
 using bsc_be.Models;
 using bsc_be.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -77,6 +78,10 @@ namespace bsc_be.Controllers
             {
                 var isSuccess = await _transactionService.UpdateTransactionItemAsync(request);
                 return Ok(new { status = "Success", message = "Transaction status updated successfully" });
+            }
+            catch (TransactionFinishedException e)
+            {
+                return Conflict(new { status = "Error", message = e.Message });
             }
             catch (Exception ex)
             {

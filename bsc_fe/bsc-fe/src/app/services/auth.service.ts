@@ -31,17 +31,17 @@ export class AuthService {
   }
   currentUser$ = this.localUserSubject.asObservable();
   setUser(user: User | null): void {
-    localStorage.setItem(
-      this.userKey,
-      JSON.stringify(user),
-    );
+    localStorage.setItem(this.userKey, JSON.stringify(user));
   }
 
   getUser(): User | null {
-    const user: User = JSON.parse(
-      localStorage.getItem(this.userKey) ?? '',
-    ) as User;
-    return user;
+    try{
+      const stringifyUser = localStorage.getItem(this.userKey)??'';
+      const user: User = JSON.parse(stringifyUser) as User;
+      return user;
+    }catch(e :any){
+      return null
+    }
   }
 
   getUserId(): number | null {

@@ -8,10 +8,12 @@ namespace bsc_be.Services
     {
         private readonly IRepository<Transaction> _transactionRepository;
         private readonly IConfiguration _configuration;
-        public TransactionService(IRepository<Transaction> transactionRepository, IConfiguration configuration)
+        private readonly IRepository<Item> _itemRepository;
+        public TransactionService(IRepository<Transaction> transactionRepository, IConfiguration configuration, IRepository<Item> itemRepository)
         {
             _transactionRepository = transactionRepository;
             _configuration = configuration;
+            _itemRepository = itemRepository;
         }
         public async Task<TransactionResponse[]?> GetTransactionAsync(int userId)
         {
@@ -83,24 +85,31 @@ namespace bsc_be.Services
             }
 
         }
-        public async Task<TransactionResponse> UpdateTransactionStatusAsync(TransactionStatusRequest request)
+
+        public async Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(request.TransactionId);
-            if (transaction == null)
+            var transaction = await _transactionRepository.GetByIdAsync(request.Id);
+            if (transaction == null) return false;
+            var itemId = transaction.ItemId;
+            await _transactionRepository.BeginTransactionAsync();
+
+            try
             {
-                throw new Exception("Transaction not found");
+                transaction.Status = Enum.Parse<Status>(request.TransactionStatus);
+                var item = await _itemRepository.GetByIdAsync(itemId.Value);
+                item.Name = request.Item.Name;
+                item.Description = request.Item.Description;
+                item.Path = request.Item.Path;
+
+                await _transactionRepository.SaveChangesAsync();
+                await _transactionRepository.CommitTransactionAsync();
+                return true;
             }
-            transaction.Status = Enum.Parse<Status>(request.Status);
-            await _transactionRepository.SaveChangesAsync();
-            return new TransactionResponse
+            catch (Exception)
             {
-                Id = transaction.Id,
-                GigName = transaction.Gig?.Name ?? string.Empty,
-                TransactionStatus = transaction.Status.ToString(),
-                Date = transaction.Date,
-                TotalPrice = transaction.TotalPrice,
-                BuyerDescription = transaction.BuyerDescription
-            };
+                await _transactionRepository.RollbackTransactionAsync();
+                return false;
+            }
         }
 
         public async Task<Boolean> DeleteTransactionAsync(long transactionId)

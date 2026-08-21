@@ -34,25 +34,5 @@ namespace bsc_be.Services
                 throw;
             }
         }
-
-        public async Task<ItemResponse> UpdateItemAsync(ItemRequest request)
-        {
-            var item = await _itemRepository.GetByIdAsync(request.Id);
-            if(item == null)
-            {
-                throw new Exception("Item not found");
-            }
-            item.Name = request.Name;
-            item.Description = request.Description;
-            item.Path = request.Path;
-            await _itemRepository.SaveChangesAsync();
-            return new ItemResponse
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description,
-                Path = item.Path
-            };
-        }
     }
 }

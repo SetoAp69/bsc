@@ -8,7 +8,7 @@ namespace bsc_be.Services
 
         public Task<Boolean> CreateTransactionAsync(TransactionRequest request);
 
-        public Task<TransactionResponse> UpdateTransactionStatusAsync(TransactionStatusRequest request);
+        public Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request);
 
         public Task<Boolean> DeleteTransactionAsync(long transactionId);
     }

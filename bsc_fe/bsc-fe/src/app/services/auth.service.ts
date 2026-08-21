@@ -12,7 +12,6 @@ export class AuthService {
   http = inject(HttpClient);
   private tokenKey = 'auth_token';
   private userKey = 'user_data';
-  private currentUserObject = new BehaviorSubject<User | null>(null);
   private localUserSubject = new BehaviorSubject<User | null>(null);
 
   constructor() {
@@ -83,7 +82,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: UserRole;
+  userRole: UserRole;
 }
 
 interface LoginResponse {

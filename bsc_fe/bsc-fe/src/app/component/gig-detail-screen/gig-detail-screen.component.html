@@ -122,26 +122,28 @@
             >Delivery Time:
             <strong>{{ gigDetail.duration }} Day(s)</strong></span
           >
-          <div class="dropdown ms-auto">
-            <button
-              [ngClass]="isPaymentError ? 'border-danger text-danger' : ''"
-              class="btn btn-sm btn-outline-primary dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              {{ paymentMethodButtonText }}
-            </button>
-            <ul class="dropdown-menu shadow-sm">
-              @for (p of paymentMethods; track $index) {
-                <li (click)="onPaymentMethodSelected(p)">
-                  <a class="dropdown-item">
-                    {{ p.name }} ({{ p.rate | percent: "1.0-2" }})
-                  </a>
-                </li>
-              }
-            </ul>
-          </div>
+          @if (isCustommer) {
+            <div class="dropdown ms-auto">
+              <button
+                [ngClass]="isPaymentError ? 'border-danger text-danger' : ''"
+                class="btn btn-sm btn-outline-primary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ paymentMethodButtonText }}
+              </button>
+              <ul class="dropdown-menu shadow-sm">
+                @for (p of paymentMethods; track $index) {
+                  <li (click)="onPaymentMethodSelected(p)">
+                    <a class="dropdown-item">
+                      {{ p.name }} ({{ p.rate | percent: "1.0-2" }})
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
         </div>
         @if (isPaymentMethodSelected) {
           <div>
@@ -157,14 +159,15 @@
             />
           </div>
         }
-        <button
-          class="btn btn-primary btn-lg w-100 fw-bold rounded-3 shadow-sm mt-2"
-          type="button"
-          (click)="onOrderNow()"
-        >
-          Order Now
-        </button>
-
+        @if (isCustommer) {
+          <button
+            class="btn btn-primary btn-lg w-100 fw-bold rounded-3 shadow-sm mt-2"
+            type="button"
+            (click)="onOrderNow()"
+          >
+            Order Now
+          </button>
+        }
         <p class="text-center text-muted small mt-3 mb-0">
           <i class="bi bi-shield-check me-1 text-success"></i>
           Guaranteed secure order

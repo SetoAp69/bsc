@@ -8,12 +8,8 @@ import { PaymentMethodService } from '../../services/payment-method.service';
 import { PaymentMethod } from '../../interfaces/payment-method';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
-import {
-  FormBuilder,
-  ɵInternalFormsSharedModule,
-  FormsModule,
-} from '@angular/forms';
-import { TransactionStatus } from '../../enums/transaction-status';
+import { ɵInternalFormsSharedModule, FormsModule } from '@angular/forms';
+import { UserRole } from '../../enums/user-role';
 
 @Component({
   selector: 'app-gig-detail-screen',
@@ -40,7 +36,7 @@ export class GigDetailScreenComponent implements OnInit {
   private transactionService = inject(TransactionService);
   private authService = inject(AuthService);
 
-  isCustommer = this.authService.getUser;
+  isCustommer = this.authService.getUser()?.userRole == UserRole.CUSTOMER;
   description = '';
   id = +(this.route.snapshot.paramMap.get('id') ?? '');
   isDetailFailed = false;

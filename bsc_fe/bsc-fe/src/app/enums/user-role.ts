@@ -1,4 +1,4 @@
 export enum UserRole {
-  SERVICE_PROVIDER,
-  CUSTOMER,
+  SERVICE_PROVIDER=<any>"SERVICE_PROVIDER",
+  CUSTOMER=<any>"CUSTOMER",
 }

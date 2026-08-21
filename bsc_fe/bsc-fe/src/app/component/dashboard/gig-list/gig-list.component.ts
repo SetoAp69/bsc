@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from '../../../shared/filter/filter.component';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../enums/user-role';
 
 @Component({
   selector: 'app-gig-list',
@@ -17,7 +19,11 @@ import { RouterLink } from '@angular/router';
 })
 export class GigListComponent implements OnInit {
   private gigService = inject(GigService);
-  @Input() userId: number |null = null 
+  private authService = inject(AuthService);
+  userId = this.authService.getUserId();
+  user= this.authService.getUser()
+  userRole = this.user?.userRole;
+  isServiceProvider = this.userRole == UserRole.SERVICE_PROVIDER;
   isLoading = false;
   showFilter = false;
   filterOptions: string[] = [
@@ -28,7 +34,7 @@ export class GigListComponent implements OnInit {
   gigs: Gig[] = [];
 
   ngOnInit(): void {
-    this.queryParams.UserId = this.userId
+    this.queryParams.UserId = this.isServiceProvider?this.userId:null;
     this.fetchGigList();
   }
 

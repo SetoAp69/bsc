@@ -1,4 +1,4 @@
-<section class="container my-4">
+<section class="mx-4 my-4">
   <div class="row align-items-center g-3 mb-4">
     <div class="col-12 col-md-6 col-lg-4">
       <div class="input-group">
@@ -25,17 +25,19 @@
     <div
       class="d-flex col-12 col-md-6 col-lg-8 d-flex justify-content-md-end align-items-center gap-2"
     >
-      <button
-        class="btn btn-outline-secondary d-flex align-items-center gap-2"
-        (click)="showFilter = !showFilter"
-        [class.active]="showFilter"
-      >
-        <i class="bi bi-funnel"></i>
-        <span>Filter</span>
-      </button>
+      <div class="dropdown ms-auto">
+        <button
+          [class.active]="showFilter"
+          class="btn dropdown-toggle btn-outline-secondary d-flex align-items-center gap-2"
+          data-bs-toggle="dropdown"
+          data-bs-auto-close="outside"
+          aria-expanded="false"
+        >
+          <i class="bi bi-funnel"></i>
+          <span>Filter</span>
+        </button>
 
-      @if (showFilter) {
-        <div class="position-absolute z-1">
+        <div class="dropdown-menu" , style="width: 350px">
           <app-filter
             [title]="'Types'"
             [filterOptions]="filterOptions"
@@ -44,7 +46,7 @@
           >
           </app-filter>
         </div>
-      }
+      </div>
     </div>
   </div>
 
@@ -65,7 +67,10 @@
           class="card border-0 shadow-sm rounded-4 flex-shrink-0 card-hover"
           style="max-width: 250px"
         >
-          <div [routerLink]="'/gig/'+gig.id" class="card-body d-flex flex-column p-4">
+          <div
+            [routerLink]="'/gig/' + gig.id"
+            class="card-body d-flex flex-column p-4"
+          >
             <h5
               class="card-title fw-bold text-dark text-center mb-1 text-truncate"
               [title]="gig.name"

@@ -23,9 +23,8 @@ export class TransactionListComponent implements OnInit {
   selectedTransaction: TransactionResponse | null = null;
   ngOnInit(): void {
     const userId = Number(this.route.snapshot.paramMap.get('userId'));
-    this.transactionService
-      .getTransactionsByUserId(userId)
-      .subscribe((transactions) => {
+    this.transactionService.getTransactionsByUserId(userId).subscribe({
+      next: (transactions) => {
         transactions.forEach((transaction) => {
           transaction.date = formatDate(
             transaction.date.toString(),
@@ -34,7 +33,8 @@ export class TransactionListComponent implements OnInit {
         this.transactionList = transactions.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
-      });
+      },
+    });
   }
 
   showEditRating(transaction: TransactionResponse): void {

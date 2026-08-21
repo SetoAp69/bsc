@@ -19,6 +19,6 @@ namespace bsc_be.Models
         public ICollection<Transaction> Transactions { set; get; } = new List<Transaction>();
         public ICollection<GigType> GigTypes { set; get; } = new List<GigType>();
 
-        public User User { get; set; } = new User();
+        public User User { get; set; }
     }
 }

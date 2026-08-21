@@ -35,41 +35,15 @@ namespace bsc_be.Services
             }
         }
 
+
         public async Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
-            if (transaction == null) return null;
-            return toTransactionResponse(transaction);
-        }
-
-        public async Task<TransactionResponse?> GetTransactionByIdAsync(int transactionId)
-        {
-            var transaction = await _transactionRepository.GetByIdAsync(transactionId, ["Gig", "Rating", "Item"]);
-            if(transaction == null)
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId, "Gig", "Rating", "Item");
+            if (transaction == null)
             {
                 throw new Exception("Transaction not found");
             }
-            return new TransactionResponse
-            {
-                Id = transaction.Id,
-                GigName = transaction.Gig.Name,
-                TransactionStatus = transaction.Status.ToString(),
-                Date = transaction.Date,
-                TotalPrice = transaction.TotalPrice,
-                BuyerDescription = transaction.BuyerDescription,
-                Rating = new RatingResponse
-                {
-                    Id = transaction.Rating.Id,
-                    Rating = transaction.Rating.Star,
-                    Comment = transaction.Rating.Comment
-                },
-                Item = new ItemResponse
-                {
-                    Id = transaction.Item.Id,
-                    Name = transaction.Item.Name,
-                    Path = transaction.Item.Path
-                }
-            };
+            return toTransactionResponse(transaction);
         }
 
         public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)
@@ -114,7 +88,7 @@ namespace bsc_be.Services
 
         public async Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(request.Id);
+            var transaction = await _transactionRepository.GetByIdAsync(request.Id, "Gig");
             if (transaction == null)
             {
                 _logger.LogWarning("Transaction not found for transaction id {TransactionId}", request.Id);
@@ -131,6 +105,11 @@ namespace bsc_be.Services
                 item.Description = request.Item.Description;
                 item.Path = request.Item.Path;
 
+                if (request.TransactionStatus == "FINISHED")
+                {
+                    transaction.TotalPrice = calculateFinalPrice(transaction);
+                }
+
                 await _transactionRepository.SaveChangesAsync();
                 await _transactionRepository.CommitTransactionAsync();
                 return true;
@@ -141,6 +120,31 @@ namespace bsc_be.Services
                 return false;
             }
         }
+
+        private decimal calculateFinalPrice(Transaction transaction)
+        {
+            var startingDate = transaction.Date;
+            var deadline = startingDate.AddDays(transaction.Gig?.Duration ?? 0);
+            var overdue = ( DateTime.Now.Date - deadline).Days;
+
+            if (overdue < 0)
+            {
+                return transaction.TotalPrice;
+            }
+
+            var penaltyRate = 0.01m;
+            var basePenaltyRate = 0.1m;
+            var basePenalty = (transaction?.Gig?.Price ?? 0) * basePenaltyRate;
+            var maxPenalty = (double)transaction.TotalPrice * 0.5;
+            var penalty = (double)basePenalty * Math.Pow((double)(1 + penaltyRate), overdue);
+            if (penalty > maxPenalty)
+            {
+                penalty = maxPenalty;
+            }
+
+            return (transaction?.TotalPrice ?? 0) - (decimal)penalty;
+        }
+
 
         public async Task<Boolean> DeleteTransactionAsync(long transactionId)
         {

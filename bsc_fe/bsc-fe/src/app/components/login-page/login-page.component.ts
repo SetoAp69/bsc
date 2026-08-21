@@ -1,5 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { usernameValidator } from '../../validators/username-validator';
@@ -10,16 +15,22 @@ import { LoadingComponent } from '../loading/loading.component';
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, LoadingComponent],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css'
+  styleUrl: './login-page.component.css',
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
+  ngOnInit(): void {
+    this.authService.logout();
+  }
   fb = inject(FormBuilder);
   router = inject(Router);
   authService = inject(AuthService);
   isLoading = false;
-  loginForm = this.fb.group({ 
-    username: ['', [usernameValidator, Validators.required, Validators.minLength(4)]],
-    password: ['', [Validators.required, Validators.minLength(4)]]
+  loginForm = this.fb.group({
+    username: [
+      '',
+      [usernameValidator, Validators.required, Validators.minLength(4)],
+    ],
+    password: ['', [Validators.required, Validators.minLength(4)]],
   });
 
   OnSubmit(): void {
@@ -37,7 +48,7 @@ export class LoginPageComponent {
         },
         complete: () => {
           this.isLoading = false;
-        }
+        },
       });
     }
   }

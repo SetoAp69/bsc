@@ -11,15 +11,16 @@ import { Rating } from '../interfaces/rating';
 import { TransactionItemUpdateRequest } from '../interfaces/transaction-item-update-request';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactionService {
   http = inject(HttpClient);
   authService = inject(AuthService);
-  constructor() { }
+  constructor() {}
   getTransactionsByUserId() {
-    console.log(`Fetching transactions for userId: ${this.authService.getToken()}`);
-    return this.http.get<TransactionResponse[]>(`${environment.apiUrl}/transactions`);
+    return this.http.get<TransactionResponse[]>(
+      `${environment.apiUrl}/transactions`,
+    );
   }
   addNewTransaction(request: TransactionRequest) {
     return this.http.post(`${environment.apiUrl}/transactions`, request);
@@ -28,13 +29,20 @@ export class TransactionService {
     return this.http.put(`${environment.apiUrl}/transactions/status`, request);
   }
   updateTransactionRating(request: TransactionRatingRequest) {
-    return this.http.put<Rating>(`${environment.apiUrl}/transactions/rating`, request);
+    return this.http.put<Rating>(
+      `${environment.apiUrl}/transactions/rating`,
+      request,
+    );
   }
   deleteTransaction(transactionId: number) {
-    return this.http.delete(`${environment.apiUrl}/transactions/${transactionId}`);
+    return this.http.delete(
+      `${environment.apiUrl}/transactions/${transactionId}`,
+    );
   }
   getTransactionById(transactionId: number) {
-    return this.http.get<TransactionResponse>(`${environment.apiUrl}/transactions/detail/${transactionId}`);
+    return this.http.get<TransactionResponse>(
+      `${environment.apiUrl}/transactions/detail/${transactionId}`,
+    );
   }
 
   updateTransactionItem(request: TransactionItemUpdateRequest) {

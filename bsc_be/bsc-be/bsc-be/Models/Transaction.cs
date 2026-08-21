@@ -30,6 +30,9 @@ namespace bsc_be.Models
 
         [Column("TOTAL_PRICE")]
         public decimal TotalPrice { get; set; } = 0;
+
+        [Column("BUYER_DESCRIPTION")]
+        public string BuyerDescription { get; set; } = string.Empty;
         public DateTime Date { get; set; } = DateTime.Now;
         public User? User { get; set; }
 

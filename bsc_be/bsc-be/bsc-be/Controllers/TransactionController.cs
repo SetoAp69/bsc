@@ -33,12 +33,7 @@ namespace bsc_be.Controllers
         {
             try
             {
-                var newItem = await CreateItem(new ItemRequest{
-                    Name = request.ItemName,
-                    Description = request.ItemDescription
-                });
-                if (newItem == null) return BadRequest(new { status = "Error", message = "Creation failed" });
-                var transaction = await _transactionService.CreateTransactionAsync(request, newItem.Id);
+                var transaction = await _transactionService.CreateTransactionAsync(request);
                 if (transaction)
                 {
                     return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });

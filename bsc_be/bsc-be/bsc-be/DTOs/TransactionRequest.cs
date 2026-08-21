@@ -8,11 +8,10 @@ namespace bsc_be.DTOs
         public long UserId { get; set; }
         [Required(ErrorMessage = "GigId is required.")]
         public long GigId { get; set; }
-        [Required(ErrorMessage = "ItemId is required.")]
-        public string ItemName { get; set; } = string.Empty;
-        public string ItemDescription { get; set; } = string.Empty;
         [Required(ErrorMessage = "PaymentMethodId is required.")]
         public long PaymentMethodId { get; set; }
+
+        public string BuyerDescription { get; set; } = string.Empty;
         public decimal TotalPrice { get; set; }
     }
 }

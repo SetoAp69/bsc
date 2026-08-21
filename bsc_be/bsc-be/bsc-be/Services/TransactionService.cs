@@ -16,7 +16,7 @@ namespace bsc_be.Services
         public async Task<TransactionResponse[]?> GetTransactionAsync(int userId)
         {
             var transactions = await _transactionRepository
-                .GetAllAsync("Gig", "Rating");
+                .GetAllAsync("Gig", "Rating", "Item");
             if (transactions == null)
             {
                 return null;
@@ -29,22 +29,34 @@ namespace bsc_be.Services
                 TransactionStatus = userTransaction.Status.ToString(),
                 Date = userTransaction.Date,
                 TotalPrice = userTransaction.TotalPrice,
+                BuyerDescription = userTransaction.BuyerDescription,
                 Rating = new RatingResponse
                 {
                     Id = userTransaction.Rating.Id,
                     Rating = userTransaction.Rating.Star,
                     Comment = userTransaction.Rating.Comment
+                },
+                Item = new ItemResponse
+                {
+                    Id = userTransaction.Item.Id,
+                    Name = userTransaction.Item.Name,
+                    Path = userTransaction.Item.Path
                 }
             }).ToArray();
         }
 
-        public async Task<Boolean> CreateTransactionAsync(TransactionRequest request, long itemId)
+        public async Task<Boolean> CreateTransactionAsync(TransactionRequest request)
         {
             var transaction = new Transaction
             {
                 BuyerId = request.UserId,
                 GigId = request.GigId,
-                ItemId = itemId,
+                Item = new Item
+                {
+                    Name = string.Empty,
+                    Description = string.Empty,
+                    Path = string.Empty
+                },
                 Status = Status.IN_PROGRESS,
                 Date = DateTime.UtcNow,
                 TotalPrice = request.TotalPrice,
@@ -53,7 +65,8 @@ namespace bsc_be.Services
                 {
                     Star = 0,
                     Comment = string.Empty
-                }
+                },
+                BuyerDescription = request.BuyerDescription
             };
             await _transactionRepository.BeginTransactionAsync();
             try
@@ -85,7 +98,8 @@ namespace bsc_be.Services
                 GigName = transaction.Gig?.Name ?? string.Empty,
                 TransactionStatus = transaction.Status.ToString(),
                 Date = transaction.Date,
-                TotalPrice = transaction.TotalPrice
+                TotalPrice = transaction.TotalPrice,
+                BuyerDescription = transaction.BuyerDescription
             };
         }
 

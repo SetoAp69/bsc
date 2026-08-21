@@ -8,6 +8,7 @@ namespace bsc_be.Services
         public Task<TransactionResponse[]?> GetTransactionsAsync(long userId, UserRole userRole);
 
         public Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId);
+      
 
         public Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request);
 

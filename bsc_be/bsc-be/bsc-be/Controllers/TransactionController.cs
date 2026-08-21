@@ -31,6 +31,21 @@ namespace bsc_be.Controllers
         }
 
         [Authorize]
+        [HttpGet("api/transactions/detail/{transactionId}")]
+        public async Task<IActionResult> GetTransactionById(int transactionId)
+        {
+            try
+            {
+                var transaction = await _transactionService.GetTransactionByIdAsync(transactionId);
+                return Ok(transaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [Authorize]
         [HttpPost("api/transactions")]
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionRequest request)
         {

@@ -7,12 +7,20 @@ import { GigDetailScreenComponent } from './component/gig-detail-screen/gig-deta
 import { ProfileScreenComponent } from './component/profile-screen/profile-screen.component';
 import { GigsByUserScreenComponent } from './component/gigs-by-user-screen/gigs-by-user-screen.component';
 import { OrderScreenComponent } from './component/order-screen/order-screen.component';
+import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
   { path: 'not-found', component: NotFoundPageComponent },
-  { path: 'transactions/:userId', component: TransactionListComponent },
+  { 
+    path: 'transactions', 
+    component: TransactionListComponent
+   },
+   {
+    path: 'transactions/detail/:id',
+    component: TransactionDetailComponent,
+   },
   {
     path: 'dashboard',
     component: DashboardScreenComponent,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { GigListComponent } from "../gig-list/gig-list.component";
 
 @Component({

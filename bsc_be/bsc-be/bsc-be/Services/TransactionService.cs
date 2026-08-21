@@ -1,4 +1,5 @@
-﻿using bsc_be.DTOs;
+﻿using System.Reflection.Metadata.Ecma335;
+using bsc_be.DTOs;
 using bsc_be.Models;
 using bsc_be.Repositories;
 
@@ -11,8 +12,8 @@ namespace bsc_be.Services
         private readonly IRepository<Item> _itemRepository;
         private readonly ILogger<TransactionService> _logger;
         public TransactionService(
-            IRepository<Transaction> transactionRepository, 
-            IConfiguration configuration, 
+            IRepository<Transaction> transactionRepository,
+            IConfiguration configuration,
             IRepository<Item> itemRepository,
             ILogger<TransactionService> logger
             )
@@ -22,36 +23,23 @@ namespace bsc_be.Services
             _itemRepository = itemRepository;
             _logger = logger;
         }
-        public async Task<TransactionResponse[]?> GetTransactionAsync(int userId)
+        public async Task<TransactionResponse[]?> GetTransactionsAsync(long userId, UserRole userRole)
         {
-            var transactions = await _transactionRepository
-                .GetAllAsync("Gig", "Rating", "Item");
-            if (transactions == null)
+            if (userRole == UserRole.CUSTOMER)
             {
-                return null;
+                return await GetCustomerTransactionsAsync(userId);
             }
-            transactions = transactions.Where(t => t.BuyerId == userId).ToList();
-            return transactions.Select(userTransaction => new TransactionResponse
+            else
             {
-                Id = userTransaction.Id,
-                GigName = userTransaction.Gig.Name,
-                TransactionStatus = userTransaction.Status.ToString(),
-                Date = userTransaction.Date,
-                TotalPrice = userTransaction.TotalPrice,
-                BuyerDescription = userTransaction.BuyerDescription,
-                Rating = new RatingResponse
-                {
-                    Id = userTransaction.Rating.Id,
-                    Rating = userTransaction.Rating.Star,
-                    Comment = userTransaction.Rating.Comment
-                },
-                Item = new ItemResponse
-                {
-                    Id = userTransaction.Item.Id,
-                    Name = userTransaction.Item.Name,
-                    Path = userTransaction.Item.Path
-                }
-            }).ToArray();
+                return await GetServiceProviderTransactionsAsync(userId);
+            }
+        }
+
+        public async Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
+            if (transaction == null) return null;
+            return toTransactionResponse(transaction);
         }
 
         public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)
@@ -132,7 +120,7 @@ namespace bsc_be.Services
                 _logger.LogWarning("Transaction not found for transaction id {TransactionId}", transaction);
                 return false;
             }
-            
+
             await _transactionRepository.BeginTransactionAsync();
             try
             {
@@ -149,5 +137,52 @@ namespace bsc_be.Services
             }
 
         }
+
+        private async Task<TransactionResponse[]?> GetCustomerTransactionsAsync(long userId)
+        {
+            var transactions = await _transactionRepository
+              .GetAllAsync("Gig", "Rating", "Item");
+            if (transactions == null)
+            {
+                return null;
+            }
+            transactions = transactions.Where(t => t.BuyerId == userId).ToList();
+            return transactions.Select(userTransaction => toTransactionResponse(userTransaction)).ToArray();
+        }
+
+        private async Task<TransactionResponse[]?> GetServiceProviderTransactionsAsync(long id)
+        {
+            var transactions = await _transactionRepository.GetAllAsync("Gig", "Rating", "Item");
+            if (transactions == null) return null;
+            transactions = transactions.Where(tr => tr.Gig.UserId == id).ToList();
+            return transactions.Select(t => toTransactionResponse(t)).ToArray();
+        }
+
+
+        private TransactionResponse toTransactionResponse(Transaction userTransaction)
+        {
+            return new TransactionResponse
+            {
+                Id = userTransaction.Id,
+                GigName = userTransaction.Gig.Name,
+                TransactionStatus = userTransaction.Status.ToString(),
+                Date = userTransaction.Date,
+                TotalPrice = userTransaction.TotalPrice,
+                BuyerDescription = userTransaction.BuyerDescription,
+                Rating = new RatingResponse
+                {
+                    Id = userTransaction.Rating.Id,
+                    Rating = userTransaction.Rating.Star,
+                    Comment = userTransaction.Rating.Comment
+                },
+                Item = new ItemResponse
+                {
+                    Id = userTransaction.Item.Id,
+                    Name = userTransaction.Item.Name,
+                    Path = userTransaction.Item.Path
+                }
+            };
+        }
+
     }
 }

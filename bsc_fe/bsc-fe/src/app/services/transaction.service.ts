@@ -16,9 +16,9 @@ export class TransactionService {
   http = inject(HttpClient);
   authService = inject(AuthService);
   constructor() { }
-  getTransactionsByUserId(userId: number) {
+  getTransactionsByUserId() {
     console.log(`Fetching transactions for userId: ${this.authService.getToken()}`);
-    return this.http.get<TransactionResponse[]>(`${environment.apiUrl}/transactions/${userId}`);
+    return this.http.get<TransactionResponse[]>(`${environment.apiUrl}/transactions`);
   }
   addNewTransaction(request: TransactionRequest) {
     return this.http.post(`${environment.apiUrl}/transactions`, request);

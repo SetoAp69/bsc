@@ -22,9 +22,8 @@ export class TransactionListComponent implements OnInit {
   isShowEditRating: boolean = false;
   selectedTransaction: TransactionResponse | null = null;
   ngOnInit(): void {
-    const userId = Number(this.route.snapshot.paramMap.get('userId'));
     this.transactionService
-      .getTransactionsByUserId(userId)
+      .getTransactionsByUserId()
       .subscribe((transactions) => {
         transactions.forEach((transaction) => {
           transaction.date = formatDate(

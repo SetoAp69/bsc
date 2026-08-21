@@ -30,7 +30,8 @@ namespace bsc_be.Services
             Claim[] claims = new[]
             {
                 new Claim("userId", user.Id.ToString()),
-                new Claim("email", user.Email)
+                new Claim("email", user.Email),
+                new Claim("userRole", user.UserRole.ToString())
             };
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

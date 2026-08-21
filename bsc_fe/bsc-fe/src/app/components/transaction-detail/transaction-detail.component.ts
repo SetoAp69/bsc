@@ -23,8 +23,8 @@ export class TransactionDetailComponent implements OnInit {
 
   fb = inject(FormBuilder);
   transactionForm = this.fb.group({
-    gigName: [''],
-    gigPath: [''],
+    itemName: [''],
+    itemPath: [''],
     itemDescription: [''],
     status: ['']
   });
@@ -39,8 +39,8 @@ export class TransactionDetailComponent implements OnInit {
           console.log('Transaction detail fetched:', this.transactionDetail);
           // Patch the form values with the fetched transaction detail
           this.transactionForm.patchValue({
-            gigName: this.transactionDetail?.item?.name || '',
-            gigPath: this.transactionDetail?.item?.path || '',
+            itemName: this.transactionDetail?.item?.name || '',
+            itemPath: this.transactionDetail?.item?.path || '',
             itemDescription: this.transactionDetail?.item?.description || '',
             status: this.transactionDetail?.transactionStatus || ''
           });
@@ -55,8 +55,8 @@ export class TransactionDetailComponent implements OnInit {
         transactionStatus: this.transactionForm.value.status as TransactionStatus,
         item: {
           ...this.transactionDetail.item,
-          name: this.transactionForm.value.gigName || '',
-          path: this.transactionForm.value.gigPath || '',
+          name: this.transactionForm.value.itemName || '',
+          path: this.transactionForm.value.itemPath || '',
           description: this.transactionForm.value.itemDescription || ''
         }
       };

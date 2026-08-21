@@ -8,6 +8,7 @@ import { ProfileScreenComponent } from './component/profile-screen/profile-scree
 import { GigsByUserScreenComponent } from './component/gigs-by-user-screen/gigs-by-user-screen.component';
 import { OrderScreenComponent } from './component/order-screen/order-screen.component';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -15,10 +16,12 @@ export const routes: Routes = [
   { path: 'not-found', component: NotFoundPageComponent },
   { 
     path: 'transactions', 
+    canActivate: [authGuard],
     component: TransactionListComponent
    },
    {
     path: 'transactions/detail/:id',
+    canActivate: [authGuard],
     component: TransactionDetailComponent,
    },
   {

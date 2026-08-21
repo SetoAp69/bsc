@@ -28,6 +28,15 @@
                 >
                   Edit
                 </span>
+                @if (transaction.transactionStatus !== 'CANCELED') {
+                <span
+                  class="badge bg-danger ms-2 user-select-none"
+                  (click)="onDeleteTransactionClick(transaction)"
+                >
+                  Delete
+                </span>
+                }
+            
               }
             </td>
             <td>{{ transaction.gigName }}</td>
@@ -81,6 +90,44 @@
             [initialRating]="selectedTransaction?.rating || null"
             (ratingChanged)="onRatingChanged($event)"
           ></app-edit-rating>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (isShowDeleteConfirmation) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete</h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="isShowDeleteConfirmation = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this transaction?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="isShowDeleteConfirmation = false"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="confirmDeleteTransaction()"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using bsc_be.DTOs;
+using bsc_be.Exceptions;
 using bsc_be.Models;
 using bsc_be.Repositories;
 
@@ -38,38 +39,8 @@ namespace bsc_be.Services
         public async Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);
-            if (transaction == null) return null;
+            if (transaction == null) throw new TransactionNotFoundException(transactionId.ToString());;
             return toTransactionResponse(transaction);
-        }
-
-        public async Task<TransactionResponse?> GetTransactionByIdAsync(int transactionId)
-        {
-            var transaction = await _transactionRepository.GetByIdAsync(transactionId, ["Gig", "Rating", "Item"]);
-            if(transaction == null)
-            {
-                throw new Exception("Transaction not found");
-            }
-            return new TransactionResponse
-            {
-                Id = transaction.Id,
-                GigName = transaction.Gig.Name,
-                TransactionStatus = transaction.Status.ToString(),
-                Date = transaction.Date,
-                TotalPrice = transaction.TotalPrice,
-                BuyerDescription = transaction.BuyerDescription,
-                Rating = new RatingResponse
-                {
-                    Id = transaction.Rating.Id,
-                    Rating = transaction.Rating.Star,
-                    Comment = transaction.Rating.Comment
-                },
-                Item = new ItemResponse
-                {
-                    Id = transaction.Item.Id,
-                    Name = transaction.Item.Name,
-                    Path = transaction.Item.Path
-                }
-            };
         }
 
         public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)

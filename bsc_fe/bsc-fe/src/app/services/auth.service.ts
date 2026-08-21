@@ -12,7 +12,7 @@ export class AuthService {
   http = inject(HttpClient);
   private tokenKey = 'auth_token';
   private userKey = 'user_data';
-  private localUserSubject = new BehaviorSubject<User | null>(null);
+  private localUserSubject = new BehaviorSubject<User | null>(this.getUser());
 
   constructor() {
     fromEvent<StorageEvent>(window, 'storage')
@@ -24,23 +24,31 @@ export class AuthService {
         map((event) => event.newValue),
       )
       .subscribe({
-        next: (e) => {
-          this.localUserSubject.next(JSON.parse(e ?? '') as User);
+        next: (value) => {
+          this.localUserSubject.next(value ? JSON.parse(value) as User : null);
         },
       });
   }
   currentUser$ = this.localUserSubject.asObservable();
   setUser(user: User | null): void {
-    localStorage.setItem(this.userKey, JSON.stringify(user));
+    if (user === null) {
+      localStorage.removeItem(this.userKey);
+    } else {
+      localStorage.setItem(this.userKey, JSON.stringify(user));
+    }
+    this.localUserSubject.next(user);
   }
 
   getUser(): User | null {
-    try{
-      const stringifyUser = localStorage.getItem(this.userKey)??'';
-      const user: User = JSON.parse(stringifyUser) as User;
-      return user;
-    }catch(e :any){
-      return null
+    const storedUser = localStorage.getItem(this.userKey);
+    if (!storedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(storedUser) as User | null;
+    } catch {
+      return null;
     }
   }
 
@@ -65,7 +73,7 @@ export class AuthService {
     return !!token;
   }
   logout(): void {
-    localStorage.removeItem(this.userKey);
+    this.setUser(null);
     localStorage.removeItem(this.tokenKey);
   }
 

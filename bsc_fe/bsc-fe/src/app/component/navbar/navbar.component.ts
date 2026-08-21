@@ -13,7 +13,17 @@ import { AuthService } from '../../services/auth.service';
 export class NavbarComponent {
   private authService = inject(AuthService);
   private route = inject(Router);
-  userId = this.authService.getUserId();
+  user = this.authService.getUser();
+  userId = this.user?.id ?? 0;
+  userName = this.user?.name ?? '';
+
+  constructor() {
+    this.authService.currentUser$.subscribe((user) => {
+      this.user = user;
+      this.userId = user?.id ?? 0;
+      this.userName = user?.name ?? '';
+    });
+  }
 
   onLogout() {
     this.authService.logout();

@@ -30,14 +30,12 @@ export class AuthService {
         },
       });
   }
-  // currentUser$ = this.currentUserObject.asObservable();
   currentUser$ = this.localUserSubject.asObservable();
   setUser(user: User | null): void {
     localStorage.setItem(
       this.userKey,
       JSON.stringify(user),
     );
-    // this.currentUserObject.next(user);
   }
 
   getUser(): User | null {

@@ -31,9 +31,10 @@ namespace bsc_be.Controllers
         [HttpPost("api/transactions")]
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionRequest request)
         {
+            var userId =  long.Parse(User.FindFirst("userId")!.Value);
             try
             {
-                var transaction = await _transactionService.CreateTransactionAsync(request);
+                var transaction = await _transactionService.CreateTransactionAsync(userId,request);
                 if (transaction)
                 {
                     return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });

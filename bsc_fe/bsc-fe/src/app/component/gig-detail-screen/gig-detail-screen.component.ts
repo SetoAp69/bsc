@@ -13,6 +13,7 @@ import {
   ɵInternalFormsSharedModule,
   FormsModule,
 } from '@angular/forms';
+import { TransactionStatus } from '../../enums/transaction-status';
 
 @Component({
   selector: 'app-gig-detail-screen',
@@ -38,8 +39,8 @@ export class GigDetailScreenComponent implements OnInit {
   private paymentMethodService = inject(PaymentMethodService);
   private transactionService = inject(TransactionService);
   private authService = inject(AuthService);
-  
-  isCustommer = this.authService.getUser
+
+  isCustommer = this.authService.getUser;
   description = '';
   id = +(this.route.snapshot.paramMap.get('id') ?? '');
   isDetailFailed = false;
@@ -98,10 +99,9 @@ export class GigDetailScreenComponent implements OnInit {
   onOrderNow() {
     if (!this.validatePayment()) return;
     try {
-      console.log(this.authService.getUserId())
+      console.log(this.authService.getUserId());
       this.transactionService
         .addNewTransaction({
-          userId: this.authService.getUserId() ?? 0,
           gigId: this.gigDetail.id,
           description: this.description,
           paymentMethodId:

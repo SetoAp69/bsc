@@ -4,8 +4,6 @@ namespace bsc_be.DTOs
 {
     public class TransactionRequest
     {
-        [Required(ErrorMessage = "UserId is required.")]
-        public long UserId { get; set; }
         [Required(ErrorMessage = "GigId is required.")]
         public long GigId { get; set; }
         [Required(ErrorMessage = "PaymentMethodId is required.")]

@@ -6,7 +6,7 @@ namespace bsc_be.Services
     {
         public Task<TransactionResponse[]?> GetTransactionAsync(int userId);
 
-        public Task<Boolean> CreateTransactionAsync(TransactionRequest request);
+        public Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request);
 
         public Task<TransactionResponse> UpdateTransactionStatusAsync(TransactionStatusRequest request);
 

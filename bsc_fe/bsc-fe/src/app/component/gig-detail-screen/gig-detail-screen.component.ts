@@ -1,20 +1,29 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { GigDetail, GigRating } from '../../interface/gig.interface';
 import { GigService } from '../../services/gig.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RatingCommentComponent } from "../rating-comment/rating-comment.component";
-import { GigDetailRatingCommentComponent } from "../gig-detail-rating-comment/gig-detail-rating-comment.component";
+import { GigDetailRatingCommentComponent } from '../gig-detail-rating-comment/gig-detail-rating-comment.component';
 import { PaymentMethodService } from '../../services/payment-method.service';
 import { PaymentMethod } from '../../interfaces/payment-method';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
+import {
+  FormBuilder,
+  ɵInternalFormsSharedModule,
+  FormsModule,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-gig-detail-screen',
   standalone: true,
-  imports: [CommonModule, GigDetailRatingCommentComponent, RouterLink],
+  imports: [
+    CommonModule,
+    GigDetailRatingCommentComponent,
+    RouterLink,
+    ɵInternalFormsSharedModule,
+    FormsModule,
+  ],
   templateUrl: './gig-detail-screen.component.html',
   styleUrl: './gig-detail-screen.component.css',
 })
@@ -23,16 +32,22 @@ export class GigDetailScreenComponent implements OnInit {
     this.fetchDetail(this.id);
     this.fetchPaymentMethods();
   }
-  route = inject(ActivatedRoute);
+
+  private route = inject(ActivatedRoute);
+  private gigService = inject(GigService);
+  private paymentMethodService = inject(PaymentMethodService);
+  private transactionService = inject(TransactionService);
+  private authService = inject(AuthService);
+  
+  isCustommer = this.authService.getUser
+  description = '';
   id = +(this.route.snapshot.paramMap.get('id') ?? '');
-  gigService = inject(GigService);
-  paymentMethodService = inject(PaymentMethodService);
-  transactionService = inject(TransactionService);
-  authService = inject(AuthService);
   isDetailFailed = false;
   isDetailLoading = false;
   isRatingsLoading = false;
   paymentMethodButtonText: string = 'Payment';
+  isPaymentMethodSelected: boolean = false;
+  isPaymentError: boolean = false;
   paymentMethods: PaymentMethod[] = [];
   totalPrice: number = 0;
   gigDetail: GigDetail = {
@@ -68,48 +83,52 @@ export class GigDetailScreenComponent implements OnInit {
       next: (res) => {
         this.paymentMethods = res;
         console.log('Payment methods fetched:', this.paymentMethods);
-      }
+      },
     });
   }
   onPaymentMethodSelected(paymentMethod: PaymentMethod) {
     this.paymentMethodButtonText = paymentMethod.name;
-    this.totalPrice = calculateTotalPrice(this.gigDetail.price, paymentMethod.rate);
+    this.validatePayment();
+    this.totalPrice = calculateTotalPrice(
+      this.gigDetail.price,
+      paymentMethod.rate,
+    );
   }
 
   onOrderNow() {
+    if (!this.validatePayment()) return;
     try {
-      this.transactionService.addNewTransaction({
-        userId: this.authService.getUserId() ?? 0,
-        gigId: this.gigDetail.id,
-        itemId: 0, // Assuming itemId is not relevant for this transaction
-        paymentMethodId: this.paymentMethods.find(pm => pm.name === this.paymentMethodButtonText)?.id ?? 0,
-        totalPrice: this.totalPrice
-      }).subscribe({
-        next: (res) => {
-          console.log('Transaction successful:', res);
-        }
-      });
-
+      this.transactionService
+        .addNewTransaction({
+          userId: this.authService.getUserId() ?? 0,
+          gigId: this.gigDetail.id,
+          description: this.description,
+          paymentMethodId:
+            this.paymentMethods.find(
+              (pm) => pm.name === this.paymentMethodButtonText,
+            )?.id ?? 0,
+          totalPrice: this.totalPrice,
+        })
+        .subscribe({
+          next: (res) => {
+            console.log('Transaction successful:', res);
+          },
+        });
     } catch (error) {
       console.error('Error occurred while adding transaction:', error);
     }
   }
-  // fetchRatings(id: number) {
-  //   this.isRatingsLoading = true;
-  //   this.gigService.getGigRatings(id).subscribe({
-  //     next: (res) => {
-  //       this.isDetailLoading = false;
-  //       this.isDetailFailed = false;
-  //       this.ratings = res;
-  //     },
-  //     error: (res) => {
-  //       this.isDetailFailed = true;
-  //       // this.ratings = 
-  //     }
-  //   });
-  // }
+  validatePayment(): boolean {
+    const valid = this.paymentMethodButtonText != 'Payment';
+    this.isPaymentMethodSelected = valid;
+    this.isPaymentError = !valid;
+    return valid;
+  }
 }
 
-function calculateTotalPrice(basePrice: number, paymentMethodRate: number): number {
-  return basePrice + (basePrice * paymentMethodRate);
+function calculateTotalPrice(
+  basePrice: number,
+  paymentMethodRate: number,
+): number {
+  return basePrice + basePrice * paymentMethodRate;
 }

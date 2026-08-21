@@ -46,7 +46,6 @@ namespace bsc_be.Services
                         .Where(g => g.Name.Contains(searchQuery!, StringComparison.OrdinalIgnoreCase))
                         .ToList();
                 }
-                // TODO: refactor this
                 if (typesFilter.Count() > 0)
                 {
                     gigs = gigs

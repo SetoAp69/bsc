@@ -1,5 +1,6 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using bsc_be.DTOs;
+using bsc_be.Exceptions;
 using bsc_be.Models;
 using bsc_be.Repositories;
 
@@ -38,11 +39,16 @@ namespace bsc_be.Services
 
         public async Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId)
         {
+<<<<<<< HEAD
             var transaction = await _transactionRepository.GetByIdAsync(transactionId, "Gig", "Rating", "Item");
             if (transaction == null)
             {
                 throw new Exception("Transaction not found");
             }
+=======
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
+            if (transaction == null) throw new TransactionNotFoundException(transactionId.ToString());;
+>>>>>>> 38e6cb256f9c9646b3cd6195d70dcf52bbe8dad8
             return toTransactionResponse(transaction);
         }
 

@@ -25,13 +25,9 @@ export class TransactionListComponent implements OnInit {
   transactionService = inject(TransactionService);
   transactionList: TransactionResponse[] = [];
   isShowEditRating: boolean = false;
+  isShowDeleteConfirmation: boolean = false;
   selectedTransaction: TransactionResponse | null = null;
   ngOnInit(): void {
-    const userId = Number(this.route.snapshot.paramMap.get('userId'));
-    if (userId == null) {
-      this.redirectToLogin();
-      return;
-    }
     this.transactionService.getTransactionsByUserId().subscribe({
       next: (transactions) => {
         transactions.forEach((transaction) => {
@@ -44,10 +40,6 @@ export class TransactionListComponent implements OnInit {
         );
       },
     });
-  }
-
-  redirectToLogin(): void {
-    this.router.navigate(['/login']);
   }
 
   showEditRating(transaction: TransactionResponse): void {
@@ -102,8 +94,10 @@ export class TransactionListComponent implements OnInit {
   }
 
   canEditRating(transaction: TransactionResponse): boolean {
-    return (
-      transaction.transactionStatus === TransactionStatus.COMPLETED &&
+    return ((
+      transaction.transactionStatus === TransactionStatus.COMPLETED || 
+      transaction.transactionStatus === TransactionStatus.CANCELED
+    ) &&
       this.userRole === UserRole.CUSTOMER
     );
   }
@@ -114,6 +108,28 @@ export class TransactionListComponent implements OnInit {
 
   onEditTransactionClick(transaction: TransactionResponse): void {
     this.router.navigate([`/transactions/detail/${transaction.id}`]);
+  }
+
+  onDeleteTransactionClick(transaction: TransactionResponse): void {
+    this.selectedTransaction = transaction;
+    this.isShowDeleteConfirmation = true;
+  }
+
+  confirmDeleteTransaction(): void {
+    if (this.selectedTransaction) {
+      this.transactionService.deleteTransaction(this.selectedTransaction.id).subscribe({
+        next: () => {
+          this.transactionList = this.transactionList.map((t) => {
+            if (t.id === this.selectedTransaction?.id) {
+              return { ...t, transactionStatus: TransactionStatus.CANCELED };
+            }
+            return t;
+          });
+          this.isShowDeleteConfirmation = false;
+          this.selectedTransaction = null;
+        },
+      });
+    }
   }
 }
 

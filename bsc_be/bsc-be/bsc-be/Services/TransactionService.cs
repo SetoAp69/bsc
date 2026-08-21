@@ -1,4 +1,5 @@
-﻿using bsc_be.DTOs;
+﻿using System.Reflection.Metadata.Ecma335;
+using bsc_be.DTOs;
 using bsc_be.Models;
 using bsc_be.Repositories;
 
@@ -9,42 +10,66 @@ namespace bsc_be.Services
         private readonly IRepository<Transaction> _transactionRepository;
         private readonly IConfiguration _configuration;
         private readonly IRepository<Item> _itemRepository;
-        public TransactionService(IRepository<Transaction> transactionRepository, IConfiguration configuration, IRepository<Item> itemRepository)
+        private readonly ILogger<TransactionService> _logger;
+        public TransactionService(
+            IRepository<Transaction> transactionRepository,
+            IConfiguration configuration,
+            IRepository<Item> itemRepository,
+            ILogger<TransactionService> logger
+            )
         {
             _transactionRepository = transactionRepository;
             _configuration = configuration;
             _itemRepository = itemRepository;
+            _logger = logger;
         }
-        public async Task<TransactionResponse[]?> GetTransactionAsync(int userId)
+        public async Task<TransactionResponse[]?> GetTransactionsAsync(long userId, UserRole userRole)
         {
-            var transactions = await _transactionRepository
-                .GetAllAsync("Gig", "Rating", "Item");
-            if (transactions == null)
+            if (userRole == UserRole.CUSTOMER)
             {
-                return null;
+                return await GetCustomerTransactionsAsync(userId);
             }
-            transactions = transactions.Where(t => t.BuyerId == userId).ToList();
-            return transactions.Select(userTransaction => new TransactionResponse
+            else
             {
-                Id = userTransaction.Id,
-                GigName = userTransaction.Gig.Name,
-                TransactionStatus = userTransaction.Status.ToString(),
-                Date = userTransaction.Date,
-                TotalPrice = userTransaction.TotalPrice,
-                BuyerDescription = userTransaction.BuyerDescription,
+                return await GetServiceProviderTransactionsAsync(userId);
+            }
+        }
+
+        public async Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
+            if (transaction == null) return null;
+            return toTransactionResponse(transaction);
+        }
+
+        public async Task<TransactionResponse?> GetTransactionByIdAsync(int transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId, ["Gig", "Rating", "Item"]);
+            if(transaction == null)
+            {
+                throw new Exception("Transaction not found");
+            }
+            return new TransactionResponse
+            {
+                Id = transaction.Id,
+                GigName = transaction.Gig.Name,
+                TransactionStatus = transaction.Status.ToString(),
+                Date = transaction.Date,
+                TotalPrice = transaction.TotalPrice,
+                BuyerDescription = transaction.BuyerDescription,
                 Rating = new RatingResponse
                 {
-                    Id = userTransaction.Rating.Id,
-                    Rating = userTransaction.Rating.Star,
-                    Comment = userTransaction.Rating.Comment
+                    Id = transaction.Rating.Id,
+                    Rating = transaction.Rating.Star,
+                    Comment = transaction.Rating.Comment
                 },
                 Item = new ItemResponse
                 {
-                    Id = userTransaction.Item.Id,
-                    Name = userTransaction.Item.Name,
-                    Path = userTransaction.Item.Path
+                    Id = transaction.Item.Id,
+                    Name = transaction.Item.Name,
+                    Path = transaction.Item.Path
                 }
-            }).ToArray();
+            };
         }
 
         public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)
@@ -81,6 +106,7 @@ namespace bsc_be.Services
             catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
+                _logger.LogWarning("Unknown Error: Adding Transaction failed");
                 throw;
             }
 
@@ -89,7 +115,11 @@ namespace bsc_be.Services
         public async Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request)
         {
             var transaction = await _transactionRepository.GetByIdAsync(request.Id);
-            if (transaction == null) return false;
+            if (transaction == null)
+            {
+                _logger.LogWarning("Transaction not found for transaction id {TransactionId}", request.Id);
+                return false;
+            }
             var itemId = transaction.ItemId;
             await _transactionRepository.BeginTransactionAsync();
 
@@ -115,7 +145,12 @@ namespace bsc_be.Services
         public async Task<Boolean> DeleteTransactionAsync(long transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);
-            if (transaction == null) return false;
+            if (transaction == null)
+            {
+                _logger.LogWarning("Transaction not found for transaction id {TransactionId}", transaction);
+                return false;
+            }
+
             await _transactionRepository.BeginTransactionAsync();
             try
             {
@@ -132,5 +167,52 @@ namespace bsc_be.Services
             }
 
         }
+
+        private async Task<TransactionResponse[]?> GetCustomerTransactionsAsync(long userId)
+        {
+            var transactions = await _transactionRepository
+              .GetAllAsync("Gig", "Rating", "Item");
+            if (transactions == null)
+            {
+                return null;
+            }
+            transactions = transactions.Where(t => t.BuyerId == userId).ToList();
+            return transactions.Select(userTransaction => toTransactionResponse(userTransaction)).ToArray();
+        }
+
+        private async Task<TransactionResponse[]?> GetServiceProviderTransactionsAsync(long id)
+        {
+            var transactions = await _transactionRepository.GetAllAsync("Gig", "Rating", "Item");
+            if (transactions == null) return null;
+            transactions = transactions.Where(tr => tr.Gig.UserId == id).ToList();
+            return transactions.Select(t => toTransactionResponse(t)).ToArray();
+        }
+
+
+        private TransactionResponse toTransactionResponse(Transaction userTransaction)
+        {
+            return new TransactionResponse
+            {
+                Id = userTransaction.Id,
+                GigName = userTransaction.Gig.Name,
+                TransactionStatus = userTransaction.Status.ToString(),
+                Date = userTransaction.Date,
+                TotalPrice = userTransaction.TotalPrice,
+                BuyerDescription = userTransaction.BuyerDescription,
+                Rating = new RatingResponse
+                {
+                    Id = userTransaction.Rating.Id,
+                    Rating = userTransaction.Rating.Star,
+                    Comment = userTransaction.Rating.Comment
+                },
+                Item = new ItemResponse
+                {
+                    Id = userTransaction.Item.Id,
+                    Name = userTransaction.Item.Name,
+                    Path = userTransaction.Item.Path
+                }
+            };
+        }
+
     }
 }

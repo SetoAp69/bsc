@@ -49,6 +49,11 @@ export class AuthService {
     return user ? user.id : null;
   }
 
+  getUserRole(): UserRole | null {
+    const user = this.getUser();
+    return user ? user.userRole : null;
+  }
+
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }

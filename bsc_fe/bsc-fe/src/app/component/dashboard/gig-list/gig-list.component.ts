@@ -9,11 +9,12 @@ import { FilterComponent } from '../../../shared/filter/filter.component';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../enums/user-role';
+import { LoadingComponent } from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-gig-list',
   standalone: true,
-  imports: [NgbModule, FormsModule, CommonModule, FilterComponent, RouterLink],
+  imports: [NgbModule, FormsModule, CommonModule, FilterComponent, RouterLink, LoadingComponent],
   templateUrl: './gig-list.component.html',
   styleUrl: './gig-list.component.css',
 })

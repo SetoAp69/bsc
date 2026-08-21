@@ -1,12 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TransactionResponse } from '../../interfaces/transaction-response';
 import { TransactionRatingRequest } from '../../interfaces/transaction-rating-request';
 import { EditRatingComponent } from '../edit-rating/edit-rating.component';
 import { Rating } from '../../interfaces/rating';
 import { TransactionStatus } from '../../enums/transaction-status';
+import { AuthService } from '../../services/auth.service';
+import { UserRole } from '../../enums/user-role';
 
 @Component({
   selector: 'app-transaction-list',
@@ -17,13 +19,20 @@ import { TransactionStatus } from '../../enums/transaction-status';
 })
 export class TransactionListComponent implements OnInit {
   route = inject(ActivatedRoute);
+  authService = inject(AuthService);
+  router = inject(Router);
+  userRole: UserRole | null = this.authService.getUserRole();
   transactionService = inject(TransactionService);
   transactionList: TransactionResponse[] = [];
   isShowEditRating: boolean = false;
   selectedTransaction: TransactionResponse | null = null;
   ngOnInit(): void {
     const userId = Number(this.route.snapshot.paramMap.get('userId'));
-    this.transactionService.getTransactionsByUserId(userId).subscribe({
+    if (userId == null) {
+      this.redirectToLogin();
+      return;
+    }
+    this.transactionService.getTransactionsByUserId().subscribe({
       next: (transactions) => {
         transactions.forEach((transaction) => {
           transaction.date = formatDate(
@@ -35,6 +44,10 @@ export class TransactionListComponent implements OnInit {
         );
       },
     });
+  }
+
+  redirectToLogin(): void {
+    this.router.navigate(['/login']);
   }
 
   showEditRating(transaction: TransactionResponse): void {
@@ -86,6 +99,18 @@ export class TransactionListComponent implements OnInit {
       }
     }
     return statusClass;
+  }
+
+  canEditRating(transaction: TransactionResponse): boolean {
+    return transaction.transactionStatus === TransactionStatus.COMPLETED;
+  }
+
+  isServiceProvider(): boolean {
+    return this.userRole === UserRole.SERVICE_PROVIDER;
+  }
+
+  onEditTransactionClick(transaction: TransactionResponse): void {
+    this.router.navigate([`/transactions/detail/${transaction.id}`]);
   }
 }
 

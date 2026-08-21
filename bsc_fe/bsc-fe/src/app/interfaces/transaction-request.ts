@@ -1,6 +1,6 @@
 export interface TransactionRequest {
     gigId: number;
-    description:string;
+    buyerDescription:string;
     paymentMethodId: number;
     totalPrice: number;
 }

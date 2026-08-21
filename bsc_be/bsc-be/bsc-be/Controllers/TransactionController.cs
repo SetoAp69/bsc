@@ -1,4 +1,5 @@
 ﻿using bsc_be.DTOs;
+using bsc_be.Models;
 using bsc_be.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,24 +16,43 @@ namespace bsc_be.Controllers
             _ratingService = ratingService;
         }
         [Authorize]
-        [HttpGet("api/transactions/{userId}")]
-        public async Task<IActionResult> GetTransactions(int userId)
+        [HttpGet("api/transactions")]
+        public async Task<IActionResult> GetTransactions()
         {
-            var transactions = await _transactionService.GetTransactionAsync(userId);
+            var userId = long.Parse(User.FindFirst("userId")!.Value);
+            var roleString = User.FindFirst("userRole")!.Value;
+            Enum.TryParse(roleString, out UserRole role);
+            var transactions = await _transactionService.GetTransactionsAsync(userId, role);
             if (transactions == null)
             {
                 return NotFound();
             }
             return Ok(transactions);
         }
+
+        [Authorize]
+        [HttpGet("api/transactions/detail/{transactionId}")]
+        public async Task<IActionResult> GetTransactionById(int transactionId)
+        {
+            try
+            {
+                var transaction = await _transactionService.GetTransactionByIdAsync(transactionId);
+                return Ok(transaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
         [Authorize]
         [HttpPost("api/transactions")]
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionRequest request)
         {
-            var userId =  long.Parse(User.FindFirst("userId")!.Value);
+            var userId = long.Parse(User.FindFirst("userId")!.Value);
             try
             {
-                var transaction = await _transactionService.CreateTransactionAsync(userId,request);
+                var transaction = await _transactionService.CreateTransactionAsync(userId, request);
                 if (transaction)
                 {
                     return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });

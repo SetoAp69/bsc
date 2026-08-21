@@ -19,7 +19,17 @@
       <tbody class="table-group-divider">
         @for (transaction of transactionList; track $index) {
           <tr class="table-primary">
-            <td scope="row">{{ $index + 1 }}</td>
+            <td scope="row">
+              {{ $index + 1 }}
+              @if (isServiceProvider()) {
+                <span
+                  class="badge bg-secondary ms-2 user-select-none"
+                  (click)="onEditTransactionClick(transaction)"
+                >
+                  Edit
+                </span>
+              }
+            </td>
             <td>{{ transaction.gigName }}</td>
             <td>
               <div
@@ -35,11 +45,14 @@
               <span class="badge bg-primary">{{
                 transaction.rating.rating | number: "1.1-1"
               }}</span>
-              <span
-                class="badge bg-secondary ms-2 user-select-none"
-                (click)="showEditRating(transaction)"
-                >Edit</span
-              >
+              @if (canEditRating(transaction)) {
+                <span
+                  class="badge bg-secondary ms-2 user-select-none"
+                  (click)="showEditRating(transaction)"
+                >
+                  Edit
+                </span>
+              }
             </td>
           </tr>
         }

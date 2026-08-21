@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GigDetail, GigRating } from '../../interface/gig.interface';
 import { GigService } from '../../services/gig.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GigDetailRatingCommentComponent } from '../gig-detail-rating-comment/gig-detail-rating-comment.component';
 import { PaymentMethodService } from '../../services/payment-method.service';
@@ -47,6 +47,7 @@ export class GigDetailScreenComponent implements OnInit {
   isPaymentError: boolean = false;
   paymentMethods: PaymentMethod[] = [];
   totalPrice: number = 0;
+  router = inject(Router);
   gigDetail: GigDetail = {
     id: 0,
     name: '',
@@ -95,11 +96,10 @@ export class GigDetailScreenComponent implements OnInit {
   onOrderNow() {
     if (!this.validatePayment()) return;
     try {
-      console.log(this.authService.getUserId());
       this.transactionService
         .addNewTransaction({
           gigId: this.gigDetail.id,
-          description: this.description,
+          buyerDescription: this.description,
           paymentMethodId:
             this.paymentMethods.find(
               (pm) => pm.name === this.paymentMethodButtonText,
@@ -108,6 +108,7 @@ export class GigDetailScreenComponent implements OnInit {
         })
         .subscribe({
           next: (res) => {
+            this.router.navigate(['/transactions']);
             console.log('Transaction successful:', res);
           },
         });

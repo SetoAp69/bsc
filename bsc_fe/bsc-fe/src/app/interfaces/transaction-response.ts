@@ -5,6 +5,7 @@ import { Rating } from "./rating";
 export interface TransactionResponse {
     id: number;
     gigName: string;
+    buyerDescription: string;
     transactionStatus: TransactionStatus;
     totalPrice: number;
     date: Date;

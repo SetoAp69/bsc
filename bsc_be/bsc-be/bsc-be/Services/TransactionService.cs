@@ -54,6 +54,36 @@ namespace bsc_be.Services
             }).ToArray();
         }
 
+        public async Task<TransactionResponse?> GetTransactionByIdAsync(int transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId, ["Gig", "Rating", "Item"]);
+            if(transaction == null)
+            {
+                throw new Exception("Transaction not found");
+            }
+            return new TransactionResponse
+            {
+                Id = transaction.Id,
+                GigName = transaction.Gig.Name,
+                TransactionStatus = transaction.Status.ToString(),
+                Date = transaction.Date,
+                TotalPrice = transaction.TotalPrice,
+                BuyerDescription = transaction.BuyerDescription,
+                Rating = new RatingResponse
+                {
+                    Id = transaction.Rating.Id,
+                    Rating = transaction.Rating.Star,
+                    Comment = transaction.Rating.Comment
+                },
+                Item = new ItemResponse
+                {
+                    Id = transaction.Item.Id,
+                    Name = transaction.Item.Name,
+                    Path = transaction.Item.Path
+                }
+            };
+        }
+
         public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)
         {
             var transaction = new Transaction

@@ -5,6 +5,7 @@ namespace bsc_be.Services
     public interface ITransactionService
     {
         public Task<TransactionResponse[]?> GetTransactionAsync(int userId);
+        public Task<TransactionResponse?> GetTransactionByIdAsync(int transactionId);
 
         public Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request);
 

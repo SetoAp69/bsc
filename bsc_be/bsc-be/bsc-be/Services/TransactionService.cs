@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using bsc_be.DTOs;
+﻿using bsc_be.DTOs;
 using bsc_be.Exceptions;
 using bsc_be.Models;
 using bsc_be.Repositories;
@@ -39,16 +38,11 @@ namespace bsc_be.Services
 
         public async Task<TransactionResponse?> GetTransactionByIdAsync(long transactionId)
         {
-<<<<<<< HEAD
             var transaction = await _transactionRepository.GetByIdAsync(transactionId, "Gig", "Rating", "Item");
             if (transaction == null)
             {
                 throw new Exception("Transaction not found");
             }
-=======
-            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
-            if (transaction == null) throw new TransactionNotFoundException(transactionId.ToString());;
->>>>>>> 38e6cb256f9c9646b3cd6195d70dcf52bbe8dad8
             return toTransactionResponse(transaction);
         }
 
@@ -100,6 +94,10 @@ namespace bsc_be.Services
                 _logger.LogWarning("Transaction not found for transaction id {TransactionId}", request.Id);
                 return false;
             }
+            if (transaction.Status == Status.FINISHED)
+            {
+                throw new TransactionFinishedException(request.Id.ToString());
+            }
             var itemId = transaction.ItemId;
             await _transactionRepository.BeginTransactionAsync();
 
@@ -131,7 +129,7 @@ namespace bsc_be.Services
         {
             var startingDate = transaction.Date;
             var deadline = startingDate.AddDays(transaction.Gig?.Duration ?? 0);
-            var overdue = ( DateTime.Now.Date - deadline).Days;
+            var overdue = (DateTime.Now.Date - deadline).Days;
 
             if (overdue < 0)
             {

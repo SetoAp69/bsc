@@ -9,11 +9,18 @@ namespace bsc_be.Services
         private readonly IRepository<Transaction> _transactionRepository;
         private readonly IConfiguration _configuration;
         private readonly IRepository<Item> _itemRepository;
-        public TransactionService(IRepository<Transaction> transactionRepository, IConfiguration configuration, IRepository<Item> itemRepository)
+        private readonly ILogger<TransactionService> _logger;
+        public TransactionService(
+            IRepository<Transaction> transactionRepository, 
+            IConfiguration configuration, 
+            IRepository<Item> itemRepository,
+            ILogger<TransactionService> logger
+            )
         {
             _transactionRepository = transactionRepository;
             _configuration = configuration;
             _itemRepository = itemRepository;
+            _logger = logger;
         }
         public async Task<TransactionResponse[]?> GetTransactionAsync(int userId)
         {
@@ -81,6 +88,7 @@ namespace bsc_be.Services
             catch (Exception)
             {
                 await _transactionRepository.RollbackTransactionAsync();
+                _logger.LogWarning("Unknown Error: Adding Transaction failed");
                 throw;
             }
 
@@ -89,7 +97,11 @@ namespace bsc_be.Services
         public async Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request)
         {
             var transaction = await _transactionRepository.GetByIdAsync(request.Id);
-            if (transaction == null) return false;
+            if (transaction == null)
+            {
+                _logger.LogWarning("Transaction not found for transaction id {TransactionId}", request.Id);
+                return false;
+            }
             var itemId = transaction.ItemId;
             await _transactionRepository.BeginTransactionAsync();
 
@@ -115,7 +127,12 @@ namespace bsc_be.Services
         public async Task<Boolean> DeleteTransactionAsync(long transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);
-            if (transaction == null) return false;
+            if (transaction == null)
+            {
+                _logger.LogWarning("Transaction not found for transaction id {TransactionId}", transaction);
+                return false;
+            }
+            
             await _transactionRepository.BeginTransactionAsync();
             try
             {

@@ -8,11 +8,11 @@ using System.Text;
 
 namespace bsc_be.Services
 {
-    public class AuthService: IAuthService
+    public class AuthService : IAuthService
     {
         private readonly IRepository<User> _userRepository;
         private readonly IConfiguration _configuration;
-        
+
         public AuthService(IRepository<User> userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
@@ -52,6 +52,7 @@ namespace bsc_be.Services
                     Id = user.Id,
                     Name = user.Name,
                     Email = user.Email,
+                    UserRole = user.UserRole.ToString()
                 }
             };
         }

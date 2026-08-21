@@ -54,11 +54,11 @@ namespace bsc_be.Services
             }).ToArray();
         }
 
-        public async Task<Boolean> CreateTransactionAsync(TransactionRequest request)
+        public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)
         {
             var transaction = new Transaction
             {
-                BuyerId = request.UserId,
+                BuyerId = UserId,
                 GigId = request.GigId,
                 Item = new Item
                 {

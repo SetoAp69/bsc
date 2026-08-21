@@ -6,13 +6,14 @@ import { TransactionResponse } from '../../interfaces/transaction-response';
 import { TransactionRatingRequest } from '../../interfaces/transaction-rating-request';
 import { EditRatingComponent } from '../edit-rating/edit-rating.component';
 import { Rating } from '../../interfaces/rating';
+import { TransactionStatus } from '../../enums/transaction-status';
 
 @Component({
   selector: 'app-transaction-list',
   standalone: true,
   imports: [CommonModule, EditRatingComponent],
   templateUrl: './transaction-list.component.html',
-  styleUrl: './transaction-list.component.css'
+  styleUrl: './transaction-list.component.css',
 })
 export class TransactionListComponent implements OnInit {
   route = inject(ActivatedRoute);
@@ -22,12 +23,18 @@ export class TransactionListComponent implements OnInit {
   selectedTransaction: TransactionResponse | null = null;
   ngOnInit(): void {
     const userId = Number(this.route.snapshot.paramMap.get('userId'));
-    this.transactionService.getTransactionsByUserId(userId).subscribe((transactions) => {
-      transactions.forEach((transaction) => {
-        transaction.date = formatDate(transaction.date.toString()) as unknown as Date;
+    this.transactionService
+      .getTransactionsByUserId(userId)
+      .subscribe((transactions) => {
+        transactions.forEach((transaction) => {
+          transaction.date = formatDate(
+            transaction.date.toString(),
+          ) as unknown as Date;
+        });
+        this.transactionList = transactions.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
       });
-      this.transactionList = transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    });
   }
 
   showEditRating(transaction: TransactionResponse): void {
@@ -42,7 +49,7 @@ export class TransactionListComponent implements OnInit {
       const request: TransactionRatingRequest = {
         ratingId: ratingId || 0,
         starRating: newRating.rating,
-        comment: newRating.comment
+        comment: newRating.comment,
       };
       this.transactionService.updateTransactionRating(request).subscribe({
         next: () => {
@@ -54,14 +61,43 @@ export class TransactionListComponent implements OnInit {
           });
           this.isShowEditRating = false;
           this.selectedTransaction = null;
-        }
+        },
       });
     }
+  }
+  getStatusClass(status: TransactionStatus): string {
+    let statusClass = '';
+    switch (status) {
+      case TransactionStatus.CANCELED: {
+        statusClass = 'bg-danger border-danger text-white';
+        break;
+      }
+      case TransactionStatus.IN_PROGRESS: {
+        statusClass = 'border-warning bg-warning text-white';
+        break;
+      }
+      case TransactionStatus.COMPLETED: {
+        statusClass = 'bg-success border-success text-white';
+        break;
+      }
+      case TransactionStatus.FINISHED: {
+        statusClass = 'bg-success border-success text-white';
+        break;
+      }
+    }
+    return statusClass;
   }
 }
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
   return date.toLocaleDateString(undefined, options);
 }

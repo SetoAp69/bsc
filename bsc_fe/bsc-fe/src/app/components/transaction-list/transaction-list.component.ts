@@ -94,10 +94,9 @@ export class TransactionListComponent implements OnInit {
   }
 
   canEditRating(transaction: TransactionResponse): boolean {
-    return ((
-      transaction.transactionStatus === TransactionStatus.COMPLETED || 
-      transaction.transactionStatus === TransactionStatus.CANCELED
-    ) &&
+    return (
+      (transaction.transactionStatus === TransactionStatus.COMPLETED ||
+        transaction.transactionStatus === TransactionStatus.CANCELED) &&
       this.userRole === UserRole.CUSTOMER
     );
   }
@@ -117,18 +116,20 @@ export class TransactionListComponent implements OnInit {
 
   confirmDeleteTransaction(): void {
     if (this.selectedTransaction) {
-      this.transactionService.deleteTransaction(this.selectedTransaction.id).subscribe({
-        next: () => {
-          this.transactionList = this.transactionList.map((t) => {
-            if (t.id === this.selectedTransaction?.id) {
-              return { ...t, transactionStatus: TransactionStatus.CANCELED };
-            }
-            return t;
-          });
-          this.isShowDeleteConfirmation = false;
-          this.selectedTransaction = null;
-        },
-      });
+      this.transactionService
+        .deleteTransaction(this.selectedTransaction.id)
+        .subscribe({
+          next: () => {
+            this.transactionList = this.transactionList.map((t) => {
+              if (t.id === this.selectedTransaction?.id) {
+                return { ...t, transactionStatus: TransactionStatus.CANCELED };
+              }
+              return t;
+            });
+            this.isShowDeleteConfirmation = false;
+            this.selectedTransaction = null;
+          },
+        });
     }
   }
 }

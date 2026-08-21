@@ -22,21 +22,22 @@
             <td scope="row">
               {{ $index + 1 }}
               @if (isServiceProvider()) {
-                <span
-                  class="badge bg-secondary ms-2 user-select-none"
-                  (click)="onEditTransactionClick(transaction)"
-                >
-                  Edit
-                </span>
-                @if (transaction.transactionStatus !== 'CANCELED') {
-                <span
-                  class="badge bg-danger ms-2 user-select-none"
-                  (click)="onDeleteTransactionClick(transaction)"
-                >
-                  Delete
-                </span>
+                @if (transaction.transactionStatus === "IN_PROGRESS") {
+                  <span
+                    class="badge bg-secondary ms-2 user-select-none"
+                    (click)="onEditTransactionClick(transaction)"
+                  >
+                    Edit
+                  </span>
                 }
-            
+                @if (transaction.transactionStatus !== "CANCELED") {
+                  <span
+                    class="badge bg-danger ms-2 user-select-none"
+                    (click)="onDeleteTransactionClick(transaction)"
+                  >
+                    Delete
+                  </span>
+                }
               }
             </td>
             <td>{{ transaction.gigName }}</td>
@@ -45,7 +46,9 @@
                 [ngClass]="getStatusClass(transaction.transactionStatus)"
                 class="badge"
               >
-                {{ transaction.transactionStatus.replaceAll('_', ' ')| titlecase }}
+                {{
+                  transaction.transactionStatus.replaceAll("_", " ") | titlecase
+                }}
               </div>
             </td>
             <td>{{ transaction.totalPrice }}</td>

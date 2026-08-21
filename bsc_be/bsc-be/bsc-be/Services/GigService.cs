@@ -78,7 +78,7 @@ namespace bsc_be.Services
             if (gig == null) return null;
             var ratings = gig
             .Transactions
-            .Where(t => t.Rating != null)
+            .Where(t => t.Rating?.Star > 0)
             .Select(t => toGigRatingResponse(t))
             .ToList();
             return ratings;
@@ -125,15 +125,10 @@ namespace bsc_be.Services
 
         private decimal calculateStars(Gig gig)
         {
-            var transactionsWithRating = gig
+            return gig
                 .Transactions
-                .Where(t => t.Rating != null);
-            var count = transactionsWithRating.Count();
-            if (count <= 0) return 0;
-            decimal totalStarRating = transactionsWithRating
-                    .Sum(t => t.Rating!.Star);
-
-            return totalStarRating / count;
+                .Where(t => t.Rating?.Star > 0)
+                .Average(t => t.Rating?.Star)??0;
         }
 
         private GigRatingResponse toGigRatingResponse(Transaction transaction)

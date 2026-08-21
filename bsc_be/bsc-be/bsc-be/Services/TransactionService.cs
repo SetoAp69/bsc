@@ -92,24 +92,25 @@ namespace bsc_be.Services
             if (transaction == null)
             {
                 _logger.LogWarning("Transaction not found for transaction id {TransactionId}", request.Id);
-                return false;
+                throw new TransactionNotFoundException(request.Id.ToString());
             }
-            if (transaction.Status == Status.FINISHED)
+            if (transaction.Status == Status.FINISHED || transaction.Status == Status.CANCELED)
             {
-                throw new TransactionFinishedException(request.Id.ToString());
+                throw new TransactionFinishedException(request.Id.ToString(),transaction.Status.ToString());
             }
             var itemId = transaction.ItemId;
             await _transactionRepository.BeginTransactionAsync();
 
             try
             {
-                transaction.Status = Enum.Parse<Status>(request.TransactionStatus);
+                var requestStatus = Enum.Parse<Status>(request.TransactionStatus);
+                transaction.Status = requestStatus;
                 var item = await _itemRepository.GetByIdAsync(itemId.Value);
                 item.Name = request.Item.Name;
                 item.Description = request.Item.Description;
                 item.Path = request.Item.Path;
 
-                if (request.TransactionStatus == "FINISHED")
+                if (requestStatus == Status.FINISHED)
                 {
                     transaction.TotalPrice = calculateFinalPrice(transaction);
                 }

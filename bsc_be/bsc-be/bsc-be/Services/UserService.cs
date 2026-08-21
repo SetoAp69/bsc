@@ -42,7 +42,7 @@ namespace bsc_be.Services
             var ratings = user
                 .Gigs
                 .SelectMany(g => g.Transactions)
-                .Where(t => t.Rating != null)
+                .Where(t => t.Rating?.Star >0)
                 .Select(t => t.Rating);
 
             var stars = ratings.Average(r => r!.Star);

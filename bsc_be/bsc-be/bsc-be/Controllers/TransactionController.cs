@@ -9,12 +9,10 @@ namespace bsc_be.Controllers
     {
         private readonly ITransactionService _transactionService;
         private readonly IRatingService _ratingService;
-        private readonly IItemService _itemService;
-        public TransactionController(ITransactionService transactionService, IRatingService ratingService, IItemService itemService)
+        public TransactionController(ITransactionService transactionService, IRatingService ratingService)
         {
             _transactionService = transactionService;
             _ratingService = ratingService;
-            _itemService = itemService;
         }
         [Authorize]
         [HttpGet("api/transactions/{userId}")]
@@ -50,14 +48,15 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
+
         [Authorize]
-        [HttpPut("api/transactions/status")]
-        public async Task<IActionResult> UpdateTransactionStatus([FromBody] TransactionStatusRequest request)
+        [HttpPut("api/transactions/item")]
+        public async Task<IActionResult> UpdateTransactionItem([FromBody] TransactionItemUpdateRequest request)
         {
             try
             {
-                var transaction = await _transactionService.UpdateTransactionStatusAsync(request);
-                return Ok(new { status = "Success", message = "Transaction status updated successfully", transaction = transaction });
+                var isSuccess = await _transactionService.UpdateTransactionItemAsync(request);
+                return Ok(new { status = "Success", message = "Transaction status updated successfully" });
             }
             catch (Exception ex)
             {
@@ -96,9 +95,5 @@ namespace bsc_be.Controllers
             }
         }
 
-        private async Task<ItemResponse?> CreateItem(ItemRequest request)
-        {
-            return await _itemService.CreateItemAsync(request);
-        }
     }
 }

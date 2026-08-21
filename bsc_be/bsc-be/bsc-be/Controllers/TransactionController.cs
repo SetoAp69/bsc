@@ -94,10 +94,5 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
-
-        private async Task<ItemResponse?> CreateItem(ItemRequest request)
-        {
-            return await _itemService.CreateItemAsync(request);
-        }
     }
 }

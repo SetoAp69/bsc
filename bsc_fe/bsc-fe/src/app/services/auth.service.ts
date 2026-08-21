@@ -50,6 +50,11 @@ export class AuthService {
     return user ? user.id : null;
   }
 
+  getUserRole(): UserRole | null {
+    const user = this.getUser();
+    return user ? user.userRole : null;
+  }
+
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
@@ -83,7 +88,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: UserRole;
+  userRole: UserRole;
 }
 
 interface LoginResponse {

@@ -1,4 +1,5 @@
 import { TransactionStatus } from "../enums/transaction-status";
+import { Item } from "./item";
 import { Rating } from "./rating";
 
 export interface TransactionResponse {
@@ -8,4 +9,5 @@ export interface TransactionResponse {
     totalPrice: number;
     date: Date;
     rating: Rating;
+    item: Item;
 }

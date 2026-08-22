@@ -13,6 +13,17 @@ import { AuthService, User } from '../../services/auth.service';
 export class NavbarComponent implements OnInit {
   private authService = inject(AuthService);
   private route = inject(Router);
+  user = this.authService.getUser();
+  userId = this.user?.id ?? 0;
+  userName = this.user?.name ?? '';
+
+  constructor() {
+    this.authService.currentUser$.subscribe((user) => {
+      this.user = user;
+      this.userId = user?.id ?? 0;
+      this.userName = user?.name ?? '';
+    });
+  }
   user: User | null = null;
 
   ngOnInit(): void {

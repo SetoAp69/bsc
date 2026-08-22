@@ -12,7 +12,7 @@ export class AuthService {
   http = inject(HttpClient);
   private tokenKey = 'auth_token';
   private userKey = 'user_data';
-  private localUserSubject = new BehaviorSubject<User | null>(null);
+  private localUserSubject = new BehaviorSubject<User | null>(this.getUser());
 
   constructor() {
     fromEvent<StorageEvent>(window, 'storage')
@@ -31,7 +31,12 @@ export class AuthService {
   }
   currentUser$ = this.localUserSubject.asObservable();
   setUser(user: User | null): void {
-    localStorage.setItem(this.userKey, JSON.stringify(user));
+    if (user === null) {
+      localStorage.removeItem(this.userKey);
+    } else {
+      localStorage.setItem(this.userKey, JSON.stringify(user));
+    }
+    this.localUserSubject.next(user);
   }
 
   getUser(): User | null {
@@ -60,7 +65,7 @@ export class AuthService {
     return !!token;
   }
   logout(): void {
-    localStorage.removeItem(this.userKey);
+    this.setUser(null);
     localStorage.removeItem(this.tokenKey);
   }
 

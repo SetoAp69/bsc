@@ -1,4 +1,10 @@
-import { Component, Directive, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  Directive,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -9,12 +15,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './filter.component.css',
 })
 export class FilterComponent {
+  [x: string]: any;
   @Input() selectedItem: string[] = [];
   @Output() onApplyFilter = new EventEmitter<string[]>();
   @Input() filterOptions: string[] = ['Aasddas', 'aasdasdB', 'CCCCCCC'];
   @Input() title: string = 'Filter';
-  
-  onReset(){
+  showFilter: Boolean = false;
+  onReset() {
     this.selectedItem = [];
   }
   onUpdateSelected(value: string) {

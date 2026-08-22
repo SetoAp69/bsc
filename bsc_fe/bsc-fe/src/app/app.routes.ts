@@ -10,6 +10,7 @@ import { OrderScreenComponent } from './component/order-screen/order-screen.comp
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 import { GigDetailRatingCommentComponent } from './component/gig-detail-rating-comment/gig-detail-rating-comment.component';
 import { authGuard } from './guards/auth.guard';
+import { GigCreateScreenComponent } from './components/gig-create-screen/gig-create-screen.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,6 +31,10 @@ export const routes: Routes = [
     component: DashboardScreenComponent,
   },
   {
+    path:'gig/create',
+    component: GigCreateScreenComponent,
+  },
+  {
     path: 'gig/:gigId',
     canActivate :[authGuard],
     component: GigDetailScreenComponent,
@@ -40,6 +45,7 @@ export const routes: Routes = [
       },
     ],
   },
+  
   {
     path: 'gig-by-user/:userId',
     component: GigsByUserScreenComponent,

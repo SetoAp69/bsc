@@ -5,8 +5,8 @@ namespace bsc_be.Middlewares
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger _logger;
-        public GlobalExceptionMiddleware(RequestDelegate next, ILogger logger)
+        private readonly ILogger<GlobalExceptionMiddleware> _logger;
+        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -19,7 +19,7 @@ namespace bsc_be.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
                 ctx.Response.ContentType = "application/json";
                 ctx.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 await ctx.Response.WriteAsJsonAsync(new

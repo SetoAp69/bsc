@@ -25,6 +25,8 @@
 
   <div class="horizontal d-flex justify-content-center">
     <button type="submit" [disabled]="loginForm.invalid" class = "btn btn-primary w-100">Login</button>
-    <app-loading *ngIf="isLoading"></app-loading>
+    @if (isLoading) {
+    <app-loading></app-loading>
+    }
   </div>
 </form>

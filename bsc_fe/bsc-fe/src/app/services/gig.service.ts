@@ -4,6 +4,7 @@ import { Gig, GigDetail, GigRating } from '../interface/gig.interface';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/env';
 import { GigQueryParam } from '../interface/gig-query-params.interface';
+import { GigRequest } from '../interfaces/gig-request';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +31,9 @@ export class GigService {
     return this.httpclient.get<GigRating[]>(
       `${environment.apiUrl}/gigs/${id}/ratings`,
     );
+  }
+
+  createGig(request: GigRequest) {
+    return this.httpclient.post(`${environment.apiUrl}/gigs`, request);
   }
 }

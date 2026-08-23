@@ -24,6 +24,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<ITypeService, TypeService>();
 
 builder.Services.AddDbContext<BscDbContext>(
     opt => opt.UseNpgsql(connStr)

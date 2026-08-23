@@ -24,8 +24,8 @@ export class AuthService {
         map((event) => event.newValue),
       )
       .subscribe({
-        next: (value) => {
-          this.localUserSubject.next(value ? JSON.parse(value) as User : null);
+        next: (e) => {
+          this.localUserSubject.next(parseUserFromJson(e??''));
         },
       });
   }
@@ -40,16 +40,8 @@ export class AuthService {
   }
 
   getUser(): User | null {
-    const storedUser = localStorage.getItem(this.userKey);
-    if (!storedUser) {
-      return null;
-    }
-
-    try {
-      return JSON.parse(storedUser) as User | null;
-    } catch {
-      return null;
-    }
+    const stringifyUser = localStorage.getItem(this.userKey) ?? '';
+    return parseUserFromJson(stringifyUser);
   }
 
   getUserId(): number | null {
@@ -91,6 +83,13 @@ export class AuthService {
   }
 }
 
+function parseUserFromJson(stringifyUser: string): User | null {
+  try {
+    return JSON.parse(stringifyUser) as User;
+  } catch {
+    return null;
+  }
+}
 export interface User {
   id: number;
   name: string;

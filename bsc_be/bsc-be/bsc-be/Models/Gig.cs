@@ -8,7 +8,7 @@ namespace bsc_be.Models
     public class Gig
     {
         [Key]
-        public long Id { get; set; } = 0;
+        public long Id { get; set; }
         [Column("USER_ID")]
         [ForeignKey(nameof(User))]
         public long UserId { get; set; } = 0;
@@ -19,6 +19,6 @@ namespace bsc_be.Models
         public ICollection<Transaction> Transactions { set; get; } = new List<Transaction>();
         public ICollection<GigType> GigTypes { set; get; } = new List<GigType>();
 
-        public User User { get; set; } = new User();
+        public User User { get; set; }
     }
 }

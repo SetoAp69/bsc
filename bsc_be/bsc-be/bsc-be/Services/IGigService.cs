@@ -7,7 +7,8 @@ namespace bsc_be.Services
     {
         public Task<List<GigResponse>> GetGigsAsync(GigQueryParams queryParam);
         public Task<GigDetailResponse?> GetGigByIdAsync(long id);
-
         public Task<List<GigRatingResponse>?> GetGigRatingAsync(long id);
+
+        public Task<Gig?> CreateGigAsync(long UserId, GigRequest request);
     }
 }

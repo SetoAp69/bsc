@@ -210,15 +210,15 @@ namespace bsc_be.Services
                 BuyerDescription = userTransaction.BuyerDescription,
                 Rating = new RatingResponse
                 {
-                    Id = userTransaction.Rating.Id,
-                    Rating = userTransaction.Rating.Star,
-                    Comment = userTransaction.Rating.Comment
+                    Id = userTransaction.Rating?.Id??0,
+                    Rating = userTransaction.Rating?.Star??0,
+                    Comment = userTransaction.Rating?.Comment??""
                 },
                 Item = new ItemResponse
                 {
-                    Id = userTransaction.Item.Id,
-                    Name = userTransaction.Item.Name,
-                    Path = userTransaction.Item.Path
+                    Id = userTransaction.Item?.Id??0,
+                    Name = userTransaction.Item?.Name??"",
+                    Path = userTransaction.Item?.Path??""
                 }
             };
         }

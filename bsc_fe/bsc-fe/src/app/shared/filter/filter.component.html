@@ -1,27 +1,28 @@
-<div class="p-2 rounded-3 border-5 border-black bg-light" style="max-width: 350px; max-height: screen">
-  <div class="d-flex flex-row justify-content-between">
-    <span>{{title}}</span>
-    <span class="text-primary" (click)="onReset()">Reset</span>
-  </div>
-  <div class="my-2 d-flex flex-wrap overflow-y-scroll">
-    @for (option of filterOptions; track $index) {
-      <div class="d-flex flex-row w-50 gap-2 flex-wrap align-middle">
-        <input
-          class="form-check"
-          type="checkbox"
-          [name]="option"
-          [id]="option"
-          (input)="onUpdateSelected(option)"
-          [checked]="selectedItem.includes(option)"
-        />
-        <label class="text-body text-wrap" [for]="option">{{ option }}</label>
+<div class="dropdown ms-auto">
+  <button #dropdownToggle
+    class="btn dropdown-toggle btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="dropdown"
+    data-bs-auto-close="outside" aria-expanded="false" (click)="showFilter=!showFilter">
+    <i class="bi bi-funnel"></i>
+    <span>Filter</span>
+  </button>
+  <div class="dropdown-menu" , style="width: 350px;">
+    <div class="p-2 rounded-3 border-5 border-black bg-light" style="max-width: 350px; max-height: screen">
+      <div class="d-flex flex-row justify-content-between">
+        <span>{{title}}</span>
+        <span class="text-primary" (click)="onReset()">Reset</span>
       </div>
-    }
+      <div class="my-2 d-flex flex-wrap overflow-y-scroll">
+        @for (option of filterOptions; track $index) {
+        <div class="d-flex flex-row w-50 gap-2 flex-wrap align-middle">
+          <input class="form-check" type="checkbox" [name]="option" [id]="option" (input)="onUpdateSelected(option)"
+            [checked]="selectedItem.includes(option)" />
+          <label class="text-body text-wrap" [for]="option">{{ option }}</label>
+        </div>
+        }
+      </div>
+      <input class="text-bg-primary border-primary btn-success btn-primary rounded-2 w-100" type="button" value="Apply"
+        (click)="applyFilter(); dropdownToggle.click()" />
+    </div>
   </div>
-  <input
-    class="text-bg-primary border-primary btn-success btn-primary rounded-2 w-100"
-    type="button"
-    value="Apply"
-    (click)="applyFilter()"
-  />
+
 </div>

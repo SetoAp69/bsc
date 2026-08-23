@@ -1,4 +1,3 @@
-using System.Globalization;
 using bsc_be.DTOs;
 using bsc_be.Models;
 using bsc_be.Repositories;
@@ -9,12 +8,18 @@ namespace bsc_be.Services
     class GigService : IGigService
     {
         private readonly IRepository<Gig> _gigRepository;
+        private readonly IRepository<GigType> _gigTypeRepository;
+        private readonly IRepository<bsc_be.Models.Type> _typeRepository;
 
         public GigService(
-            IRepository<Gig> gigRepository
+            IRepository<Gig> gigRepository,
+            IRepository<GigType> gigTypeRepository,
+            IRepository<bsc_be.Models.Type> typeRepository
         )
         {
             _gigRepository = gigRepository;
+            _typeRepository = typeRepository;
+            _gigTypeRepository = gigTypeRepository;
         }
 
         public async Task<GigDetailResponse?> GetGigByIdAsync(long id)
@@ -128,7 +133,7 @@ namespace bsc_be.Services
             return gig
                 .Transactions
                 .Where(t => t.Rating?.Star > 0)
-                .Average(t => t.Rating?.Star)??0;
+                .Average(t => t.Rating?.Star) ?? 0;
         }
 
         private GigRatingResponse toGigRatingResponse(Transaction transaction)
@@ -140,6 +145,48 @@ namespace bsc_be.Services
                 Rating = transaction.Rating!.Star,
                 Comment = transaction.Rating!.Comment,
             };
+        }
+
+        public async Task<Gig?> CreateGigAsync(long UserId, GigRequest Request)
+        {
+            await _gigTypeRepository.BeginTransactionAsync();
+            try
+            {
+                var types = await _typeRepository.GetAllAsync();
+                types = types
+                .Where(t => Request.Types.Contains(t.Id))
+                .ToList();
+
+                var gig = new Gig
+                {
+                    Name = Request.Name,
+                    Description = Request.Description,
+                    UserId = UserId,
+                    Duration = Request.Duration,
+                    Price = Request.Price,
+                };
+
+                await _gigRepository.AddAsyncThenGet(gig);
+                types.ForEach(t =>
+                    _gigTypeRepository.AddAsync(
+                        new GigType
+                        {
+                            GigId = gig.Id,
+                            TypeId = t.Id
+                        }
+                    )
+                );
+
+                await _gigTypeRepository.SaveChangesAsync();
+                var created = await _gigRepository.GetByIdAsync(gig.Id);
+                await _gigTypeRepository.CommitTransactionAsync();
+                return created;
+            }
+            catch (Exception e)
+            {
+                await _gigTypeRepository.RollbackTransactionAsync();
+                return null;
+            }
         }
     }
 }

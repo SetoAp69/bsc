@@ -66,5 +66,34 @@ namespace bsc_be.Controllers
                 return BadRequest(new { status = "Error", message = ex.Message });
             }
         }
+
+        [Authorize]
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> UpdateGig(long id, [FromBody] GigEditRequest request)
+        {
+            var userId = long.Parse(User.FindFirst("userId")!.Value);
+            var roleString = User.FindFirst("userRole")!.Value;
+            Enum.TryParse(roleString, out UserRole role);
+            if (role != UserRole.SERVICE_PROVIDER)
+            {
+                return BadRequest("User with this role can't update a gig");
+            }
+            try
+            {
+                var gig = await _gigService.UpdateGigAsync(id, userId, request);
+                if (gig != null)
+                {
+                    return Ok(new { status = "Success", message = "Gig updated successfully", transaction = gig.Id });
+                }
+                else
+                {
+                    return BadRequest(new { status = "Error", message = "Update failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { status = "Error", message = ex.Message });
+            }
+        }
     }
 }

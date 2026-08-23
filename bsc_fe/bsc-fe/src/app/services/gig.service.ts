@@ -36,4 +36,8 @@ export class GigService {
   createGig(request: GigRequest) {
     return this.httpclient.post(`${environment.apiUrl}/gigs`, request);
   }
+
+  updateGig(id: number, request: GigRequest) {
+    return this.httpclient.put(`${environment.apiUrl}/gigs/${id}`, request);
+  }
 }

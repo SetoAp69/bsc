@@ -1,0 +1,54 @@
+<div class="w-100 mt-2">
+    <form [formGroup]="createGigForm" (submit)="OnSubmit()">
+        <div class="mb-3">
+            <label for="name" class="form-label">Gig's Name</label>
+            <input maxlength="100" id="" type="text" class="form-control" placeholder="Enter Gig's name"
+                formControlName="name">
+            @if(createGigForm.controls.name.getError('error') && createGigForm.controls.name.touched){
+            <span class="text-danger"> {{createGigForm.controls.name.getError('message')}} </span>
+            }
+        </div>
+        <div class="mb-lg-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" min="1" class="form-control" placeholder="Enter Gig's price" formControlName="price">
+            @if(createGigForm.controls.price.getError('error') && createGigForm.controls.price.touched){
+            <span class="text-danger"> {{createGigForm.controls.price.getError('message')}} </span>
+            }
+        </div>
+        <div class="mb-lg-3">
+            <label for="duration" class="form-label">Duration</label>
+            <input type="number" min="1" class="form-control" placeholder="How long does it take?"
+                formControlName="duration">
+            @if(createGigForm.controls.duration.getError('error') && createGigForm.controls.duration.touched){
+            <span class="text-danger"> {{createGigForm.controls.duration.getError('message')}} </span>
+            }
+        </div>
+        <div class="mb-lg-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea rows="2" class="form-control" placeholder="Tell us about your gig"
+                formControlName="description"></textarea>
+            @if(createGigForm.controls.description.getError('error') &&
+            createGigForm.controls.description.touched){
+            <span class="text-danger"> {{createGigForm.controls.description.getError('message')}} </span>
+            }
+        </div>
+        <div class="mb-lg-3">
+            <label for="types" class="form-label">Types</label>
+            <app-gig-type-selector formControlName="types" [options]="types"></app-gig-type-selector>
+            @if(createGigForm.controls.types.getError('error') && createGigForm.controls.types.touched){
+            <span class="text-danger"> {{createGigForm.controls.types.getError('message')}} </span>
+            }
+        </div>
+        <button type="submit" [disabled]="createGigForm.status ==='INVALID'" class="btn btn-dark w-100 mt-4">
+            Update Gig
+        </button>
+        @if (isLoading) {
+        <app-loading></app-loading>
+        }
+    </form>
+</div>
+@if (toastState!=null) {
+<ngb-toast [ngClass] = "toastState ? 'border-success text-success' : 'border-danger text-danger'" class="mt-2 toast" [autohide]="true" (hidden)="toastState=null">
+    {{ toastMessage }}
+</ngb-toast>
+}

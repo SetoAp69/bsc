@@ -18,7 +18,7 @@ export class GigDetailRatingCommentComponent implements OnInit {
   ratings: GigRating[] = [];
   gigId: number = 0;
   ngOnInit(): void {
-    this.gigId = +(this.route.parent?.snapshot.paramMap.get('gigId') ?? '');
+    this.gigId = +(this.route.snapshot.paramMap.get('gigId') ?? '');
     this.fetchRatings();
   }
 

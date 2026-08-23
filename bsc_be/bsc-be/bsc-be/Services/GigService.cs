@@ -189,5 +189,48 @@ namespace bsc_be.Services
                 return null;
             }
         }
+
+        public async Task<Gig?> UpdateGigAsync(long id, long UserId, GigEditRequest request)
+        {
+            await _gigRepository.BeginTransactionAsync();
+            try
+            {
+                var gig = await _gigRepository.GetByIdAsync(id, "GigTypes");
+                if (gig == null)
+                {
+                    throw new GigNotFoundException(id);
+                }
+                if (gig.UserId != UserId)
+                {
+                    throw new UnauthorizedAccessException("You are not authorized to update this gig.");
+                }
+
+                gig.Name = request.Name;
+                gig.Description = request.Description;
+                gig.Duration = request.Duration;
+                gig.Price = request.Price;
+
+                var gigTypes = await _gigTypeRepository.GetAllAsync();
+                gigTypes = gigTypes.Where(gt => gt.GigId == id).ToList();
+
+                var removedTypes = gigTypes.Where(gt => !request.Types.Contains(gt.TypeId)).ToList();
+                var addedTypes = request.Types.Where(t => !gigTypes.Any(gt => gt.TypeId == t)).ToList();
+
+                _gigRepository.Update(gig);
+                addedTypes.ForEach(async t =>
+                {
+                    await _gigTypeRepository.AddAsync(new GigType { GigId = id, TypeId = t });
+                });
+                removedTypes.ForEach(gt => _gigTypeRepository.Delete(gt));
+                await _gigRepository.SaveChangesAsync();
+                await _gigRepository.CommitTransactionAsync();
+                return gig;
+            }
+            catch (Exception e)
+            {
+                await _gigRepository.RollbackTransactionAsync();
+                return null;
+            }
+        }
     }
 }

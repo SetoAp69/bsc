@@ -18,6 +18,7 @@ import {
 } from '../../../validators/gig-request-validators';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingComponent } from "../../shared/loading/loading.component";
+import { CreateEditGigForm, formToRequest } from '../../../interfaces/gig-create-edit-form';
 
 @Component({
   selector: 'app-gig-create-screen',
@@ -34,7 +35,7 @@ export class GigCreateScreenComponent implements OnInit {
   private location = inject(Location);
   private gigService = inject(GigService);
   private fb = inject(FormBuilder);
-  createGigForm: FormGroup<CreateGigForm> = this.fb.group({
+  createGigForm: FormGroup<CreateEditGigForm> = this.fb.group({
     name: [
       null as string | null,
       [GigRequestStringValidator(true, 100, "Gig's name")],
@@ -83,20 +84,3 @@ export class GigCreateScreenComponent implements OnInit {
   }
 }
 
-type CreateGigForm = {
-  name: FormControl<string | null>;
-  description: FormControl<string | null>;
-  duration: FormControl<number | null>;
-  price: FormControl<number | null>;
-  types: FormControl<number[] | null>;
-};
-
-function formToRequest(form: FormGroup<CreateGigForm>): GigRequest {
-  return {
-    name: form.value.name ?? '',
-    description: form.value.description ?? '',
-    duration: form.value.duration ?? 0,
-    price: form.value.price ?? 0,
-    types: form.value.types ?? [],
-  };
-}

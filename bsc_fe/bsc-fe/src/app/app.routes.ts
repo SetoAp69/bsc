@@ -9,6 +9,7 @@ import { TransactionDetailComponent } from './components/transaction-detail/tran
 import { authGuard } from './guards/auth.guard';
 import { GigCreateScreenComponent } from './components/gig-create/gig-create-screen/gig-create-screen.component';
 import { GigDetailRatingCommentComponent } from './components/gig-detail/gig-detail-rating-comment/gig-detail-rating-comment.component';
+import { GigEditComponent } from './components/gig-detail/gig-edit/gig-edit.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -37,10 +38,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     component: GigDetailScreenComponent,
     children: [
+    
       {
-        path: 'ratings',
-        component: GigDetailRatingCommentComponent,
-      },
+        path:'edit',
+        component: GigEditComponent,
+      }
     ],
   },
   {

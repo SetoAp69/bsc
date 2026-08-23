@@ -1,7 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GigDetail, GigRating } from '../../../interfaces/gig.interface';
 import { GigService } from '../../../services/gig.service';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GigDetailRatingCommentComponent } from '../gig-detail-rating-comment/gig-detail-rating-comment.component';
 import { PaymentMethodService } from '../../../services/payment-method.service';
@@ -20,8 +25,8 @@ import { UserRole } from '../../../enums/user-role';
     RouterLink,
     ɵInternalFormsSharedModule,
     FormsModule,
-    RouterOutlet
-],
+    RouterOutlet,
+  ],
   templateUrl: './gig-detail-screen.component.html',
   styleUrl: './gig-detail-screen.component.css',
 })
@@ -63,6 +68,7 @@ export class GigDetailScreenComponent implements OnInit {
     types: [],
   };
   ratings: GigRating[] = [];
+  isMyGig: boolean = false;
   fetchDetail(id: number) {
     this.isDetailLoading = true;
     this.gigService.getGigById(id).subscribe({
@@ -70,7 +76,8 @@ export class GigDetailScreenComponent implements OnInit {
         this.isDetailLoading = false;
         this.isDetailFailed = false;
         this.gigDetail = res;
-        this.totalPrice = this.gigDetail.price; // Initialize totalPrice with the base price of the gig
+        this.totalPrice = this.gigDetail.price;
+        this.isMyGig = this.authService.getUserId() === this.gigDetail.gigCreator.id;
       },
       error: (res) => {
         this.isDetailFailed = true;

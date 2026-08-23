@@ -8,7 +8,7 @@ import {
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { usernameValidator } from '../../validators/username-validator';
-import { LoadingComponent } from '../loading/loading.component';
+import { LoadingComponent } from '../shared/loading/loading.component';
 
 @Component({
   selector: 'app-login-page',

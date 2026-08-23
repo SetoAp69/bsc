@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NavbarComponent } from "./component/navbar/navbar.component";
-import { FilterComponent } from "./shared/filter/filter.component";
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { FilterComponent } from "./components/shared/filter/filter.component";
 
 @Component({
   selector: 'app-root',

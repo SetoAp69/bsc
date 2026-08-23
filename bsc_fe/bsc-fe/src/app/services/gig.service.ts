@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Gig, GigDetail, GigRating } from '../interface/gig.interface';
+import { Gig, GigDetail, GigRating } from '../interfaces/gig.interface';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/env';
-import { GigQueryParam } from '../interface/gig-query-params.interface';
+import { GigQueryParam } from '../interfaces/gig-query-params.interface';
 import { GigRequest } from '../interfaces/gig-request';
 
 @Injectable({

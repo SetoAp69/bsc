@@ -10,33 +10,41 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../enums/user-role';
 import { LoadingComponent } from '../../../components/loading/loading.component';
+import { EmptyStateComponent } from '../../../components/shared/empty-state/empty-state.component';
+import { TypeService } from '../../../services/type.service';
 
 @Component({
   selector: 'app-gig-list',
   standalone: true,
-  imports: [NgbModule, FormsModule, CommonModule, FilterComponent, RouterLink, LoadingComponent],
+  imports: [
+    NgbModule,
+    FormsModule,
+    CommonModule,
+    FilterComponent,
+    RouterLink,
+    LoadingComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './gig-list.component.html',
   styleUrl: './gig-list.component.css',
 })
 export class GigListComponent implements OnInit {
   private gigService = inject(GigService);
+  private typeService = inject(TypeService);
   private authService = inject(AuthService);
   userId = this.authService.getUserId();
-  user= this.authService.getUser()
+  user = this.authService.getUser();
   userRole = this.user?.userRole;
   isServiceProvider = this.userRole == UserRole.SERVICE_PROVIDER;
   isLoading = false;
   showFilter = false;
-  filterOptions: string[] = [
-    'Graphic Design',
-    'Web Development',
-    'Copywriting',
-  ];
+  filterOptions: string[] = [];
   gigs: Gig[] = [];
 
   ngOnInit(): void {
-    this.queryParams.UserId = this.isServiceProvider?this.userId:null;
+    this.queryParams.UserId = this.isServiceProvider ? this.userId : null;
     this.fetchGigList();
+    this.fetchTypeFilterOptions();
   }
 
   queryParams: GigQueryParam = {
@@ -64,6 +72,12 @@ export class GigListComponent implements OnInit {
         this.isLoading = false;
         this.gigs = res;
       },
+    });
+  }
+
+  fetchTypeFilterOptions() {
+    this.typeService.getTypes().subscribe({
+      next: (res) => (this.filterOptions = res.map((x) => x.name)),
     });
   }
 }

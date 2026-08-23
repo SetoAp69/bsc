@@ -9,11 +9,12 @@ import { Rating } from '../../interfaces/rating';
 import { TransactionStatus } from '../../enums/transaction-status';
 import { AuthService } from '../../services/auth.service';
 import { UserRole } from '../../enums/user-role';
+import { EmptyStateComponent } from "../shared/empty-state/empty-state.component";
 
 @Component({
   selector: 'app-transaction-list',
   standalone: true,
-  imports: [CommonModule, EditRatingComponent],
+  imports: [CommonModule, EditRatingComponent, EmptyStateComponent],
   templateUrl: './transaction-list.component.html',
   styleUrl: './transaction-list.component.css',
 })

@@ -40,6 +40,9 @@ export class TransactionListComponent implements OnInit {
           transaction.date = formatDate(
             transaction.date.toString(),
           ) as unknown as Date;
+          transaction.deadline = formatDate(
+            transaction.deadline.toString(),
+          ) as unknown as Date;
         });
         this.transactionList = transactions.sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),

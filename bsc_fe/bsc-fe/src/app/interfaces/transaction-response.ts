@@ -7,8 +7,11 @@ export interface TransactionResponse {
     gigName: string;
     buyerDescription: string;
     transactionStatus: TransactionStatus;
-    totalPrice: number;
+    totalPriceReceived: number;
+    totalPricePaid: number;
+    basePrice: number;
     date: Date;
     rating: Rating;
     item: Item;
+    deadline:Date;
 }

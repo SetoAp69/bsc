@@ -8,17 +8,20 @@ namespace bsc_be.Services
     public class TransactionService : ITransactionService
     {
         private readonly IRepository<Transaction> _transactionRepository;
+        private readonly IRepository<Gig> _gigRepository;
         private readonly IConfiguration _configuration;
         private readonly IRepository<Item> _itemRepository;
         private readonly ILogger<TransactionService> _logger;
         public TransactionService(
             IRepository<Transaction> transactionRepository,
+            IRepository<Gig> gigRepository,
             IConfiguration configuration,
             IRepository<Item> itemRepository,
             ILogger<TransactionService> logger
             )
         {
             _transactionRepository = transactionRepository;
+            _gigRepository = gigRepository;
             _configuration = configuration;
             _itemRepository = itemRepository;
             _logger = logger;
@@ -48,6 +51,10 @@ namespace bsc_be.Services
 
         public async Task<Boolean> CreateTransactionAsync(long UserId, TransactionRequest request)
         {
+            var gig = await _gigRepository.GetByIdAsync(request.GigId);
+            if(gig==null){
+                throw new GigNotFoundException(request.GigId);
+            }
             var transaction = new Transaction
             {
                 BuyerId = UserId,
@@ -60,8 +67,11 @@ namespace bsc_be.Services
                 },
                 Status = Status.IN_PROGRESS,
                 Date = DateTime.UtcNow,
-                TotalPrice = request.TotalPrice,
+                TotalPriceReceived = gig.Price,
+                BasePrice = gig.Price,
+                TotalPricePaid = request.TotalPrice,
                 PaymentMethodId = request.PaymentMethodId,
+                Deadline = DateTime.UtcNow.AddDays(gig?.Duration ?? 0),
                 Rating = new Rating
                 {
                     Star = 0,
@@ -88,7 +98,7 @@ namespace bsc_be.Services
 
         public async Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(request.Id, "Gig");
+            var transaction = await _transactionRepository.GetByIdAsync(request.Id);
             if (transaction == null)
             {
                 _logger.LogWarning("Transaction not found for transaction id {TransactionId}", request.Id);
@@ -112,7 +122,7 @@ namespace bsc_be.Services
 
                 if (requestStatus == Status.FINISHED)
                 {
-                    transaction.TotalPrice = calculateFinalPrice(transaction);
+                    transaction.TotalPriceReceived = calculateFinalPrice(transaction);
                 }
 
                 await _transactionRepository.SaveChangesAsync();
@@ -128,26 +138,25 @@ namespace bsc_be.Services
 
         private decimal calculateFinalPrice(Transaction transaction)
         {
-            var startingDate = transaction.Date;
-            var deadline = startingDate.AddDays(transaction.Gig?.Duration ?? 0);
-            var overdue = (DateTime.Now.Date - deadline).Days;
+            if(transaction == null) return 0m;
+            var deadline = transaction.Deadline;
+            var overdue = (DateTime.Now - deadline).Days;
 
-            if (overdue < 0)
+            if (overdue <= 0)
             {
-                return transaction.TotalPrice;
+                return transaction.BasePrice;
             }
-
             var penaltyRate = 0.01m;
-            var basePenaltyRate = 0.1m;
-            var basePenalty = (transaction?.Gig?.Price ?? 0) * basePenaltyRate;
-            var maxPenalty = (double)transaction.TotalPrice * 0.5;
-            var penalty = (double)basePenalty * Math.Pow((double)(1 + penaltyRate), overdue);
+            var basePenaltyRate = 0.1m; 
+            var basePenalty = transaction.BasePrice * basePenaltyRate; 
+            var maxPenaltyPercentage = 0.5m;
+            var maxPenalty = transaction.BasePrice * maxPenaltyPercentage;
+            var penalty = basePenalty * (decimal)Math.Pow((double)(1 + penaltyRate), overdue);
             if (penalty > maxPenalty)
             {
                 penalty = maxPenalty;
             }
-
-            return (transaction?.TotalPrice ?? 0) - (decimal)penalty;
+            return Math.Max(0, transaction.BasePrice - penalty);
         }
 
 
@@ -206,8 +215,11 @@ namespace bsc_be.Services
                 GigName = userTransaction.Gig.Name,
                 TransactionStatus = userTransaction.Status.ToString(),
                 Date = userTransaction.Date,
-                TotalPrice = userTransaction.TotalPrice,
+                BasePrice = userTransaction.BasePrice,
+                TotalPriceReceived = userTransaction.TotalPriceReceived,
+                TotalPricePaid = userTransaction.TotalPricePaid,
                 BuyerDescription = userTransaction.BuyerDescription,
+                Deadline = userTransaction.Deadline,
                 Rating = new RatingResponse
                 {
                     Id = userTransaction.Rating?.Id??0,

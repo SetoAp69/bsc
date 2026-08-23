@@ -10,8 +10,10 @@
           <th>No.</th>
           <th>Gig Name</th>
           <th>Status</th>
+          @if(isServiceProvider()){<th>Base Price</th>}
           <th>Total Price</th>
           <th>Date</th>
+          @if(isServiceProvider()){<th>Deadline</th>}
           <th>Rating</th>
         </tr>
       </thead>
@@ -41,8 +43,16 @@
               }}
             </div>
           </td>
-          <td>{{ transaction.totalPrice }}</td>
+          @if(isServiceProvider()){<td>{{ transaction.basePrice | currency }}</td>}
+          <td>
+            @if (isServiceProvider()) {
+            {{ transaction.totalPriceReceived | currency }}
+            } @else {
+            {{ transaction.totalPricePaid | currency }}
+            }
+          </td>
           <td>{{ transaction.date }}</td>
+          @if(isServiceProvider()){<td>{{ transaction.deadline }}</td>}
           <td>
             <span class="badge bg-primary">{{
               transaction.rating.rating | number: "1.1-1"

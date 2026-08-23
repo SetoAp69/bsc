@@ -28,8 +28,16 @@ namespace bsc_be.Models
         [ForeignKey(nameof(PaymentMethod))]
         public long PaymentMethodId { get; set; } = 0;
 
-        [Column("TOTAL_PRICE")]
-        public decimal TotalPrice { get; set; } = 0;
+        [Column("BASE_PRICE")]
+        public decimal BasePrice {get;set;} = 0;
+        [Column("TOTAL_PRICE_PAID")]
+        public decimal TotalPricePaid {get;set;} = 0;
+
+        [Column("TOTAL_PRICE_RECEIVED")]
+        public decimal TotalPriceReceived { get; set; } = 0;
+
+        [Column("DEADLINE")]
+        public DateTime Deadline { get; set; } = DateTime.Now;
 
         [Column("BUYER_DESCRIPTION")]
         public string BuyerDescription { get; set; } = string.Empty;

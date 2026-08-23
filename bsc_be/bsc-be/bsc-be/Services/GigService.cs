@@ -149,12 +149,12 @@ namespace bsc_be.Services
 
         public async Task<Gig?> CreateGigAsync(long UserId, GigRequest Request)
         {
-            await _gigRepository.BeginTransactionAsync();
+            await _gigTypeRepository.BeginTransactionAsync();
             try
             {
                 var types = await _typeRepository.GetAllAsync();
                 types = types
-                .Where(t => Request.types.Contains(t.Id))
+                .Where(t => Request.Types.Contains(t.Id))
                 .ToList();
 
                 var gig = new Gig
@@ -166,8 +166,7 @@ namespace bsc_be.Services
                     Price = Request.Price,
                 };
 
-                await _gigRepository.AddAsync(gig);
-                await _gigRepository.SaveChangesAsync();
+                await _gigRepository.AddAsyncThenGet(gig);
                 types.ForEach(t =>
                     _gigTypeRepository.AddAsync(
                         new GigType
@@ -178,14 +177,14 @@ namespace bsc_be.Services
                     )
                 );
 
-                await _gigRepository.SaveChangesAsync();
+                await _gigTypeRepository.SaveChangesAsync();
                 var created = await _gigRepository.GetByIdAsync(gig.Id);
-                await _gigRepository.CommitTransactionAsync();
+                await _gigTypeRepository.CommitTransactionAsync();
                 return created;
             }
             catch (Exception e)
             {
-                await _gigRepository.RollbackTransactionAsync();
+                await _gigTypeRepository.RollbackTransactionAsync();
                 return null;
             }
         }

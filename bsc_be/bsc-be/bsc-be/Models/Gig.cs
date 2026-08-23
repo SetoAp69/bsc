@@ -8,7 +8,7 @@ namespace bsc_be.Models
     public class Gig
     {
         [Key]
-        public long Id { get; set; } = 0;
+        public long Id { get; set; }
         [Column("USER_ID")]
         [ForeignKey(nameof(User))]
         public long UserId { get; set; } = 0;

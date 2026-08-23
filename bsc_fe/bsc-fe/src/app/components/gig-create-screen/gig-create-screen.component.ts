@@ -5,21 +5,24 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  MinValidator,
   ReactiveFormsModule,
-  RequiredValidator,
-  Validators,
 } from '@angular/forms';
 import { GigRequest } from '../../interfaces/gig-request';
-import { Router, RouterLinkActive } from '@angular/router';
 import { Location } from '@angular/common';
 import { Type } from '../../interfaces/type';
 import { GigTypeSelectorComponent } from '../gig-type-selector/gig-type-selector.component';
+import {
+  GigRequestArrayValidator,
+  GigRequestNumberValidator,
+  GigRequestStringValidator,
+} from '../../validators/gig-request-validators';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
+import { LoadingComponent } from "../loading/loading.component";
 
 @Component({
   selector: 'app-gig-create-screen',
   standalone: true,
-  imports: [ReactiveFormsModule, GigTypeSelectorComponent],
+  imports: [ReactiveFormsModule, GigTypeSelectorComponent, NgbToast, LoadingComponent],
   templateUrl: './gig-create-screen.component.html',
   styleUrl: './gig-create-screen.component.css',
 })
@@ -32,22 +35,36 @@ export class GigCreateScreenComponent implements OnInit {
   private gigService = inject(GigService);
   private fb = inject(FormBuilder);
   createGigForm: FormGroup<CreateGigForm> = this.fb.group({
-    name: ['', Validators.required],
-    description: [''],
-    duration: [0, Validators.min(1)],
-    price: [0, Validators.min(1)],
-    types: [[] as number[], Validators.minLength(1)],
+    name: [
+      null as string | null,
+      [GigRequestStringValidator(true, 100, "Gig's name")],
+    ],
+    description: [
+      null as string | null,
+      [GigRequestStringValidator(false, 100, "Gig's name")],
+    ],
+    duration: [0, [GigRequestNumberValidator(1, null, 'Duration')]],
+    price: [0, GigRequestNumberValidator(1, null, 'Price')],
+    types: [
+      [] as number[],
+      [GigRequestArrayValidator(true, null, "Gig's type")],
+    ],
   });
   types: Type[] = [];
+  isLoading: boolean = false;
+  isShowErrorToast: boolean = false;
 
   OnSubmit() {
+    this.isLoading = true;
     const reqBody = formToRequest(this.createGigForm);
     this.gigService.createGig(reqBody).subscribe({
       next: (res) => {
+        this.isLoading = false;
         this.location.back();
       },
       error: (err) => {
-        console.log(err);
+        this.isLoading = false;
+        this.isShowErrorToast = true;
       },
     });
   }
@@ -56,6 +73,13 @@ export class GigCreateScreenComponent implements OnInit {
     this.typeService.getTypes().subscribe({
       next: (res) => (this.types = res),
     });
+  }
+
+  isNameError(): boolean {
+    return (
+      this.createGigForm.controls.name.touched &&
+      this.createGigForm.getError('required')
+    );
   }
 }
 

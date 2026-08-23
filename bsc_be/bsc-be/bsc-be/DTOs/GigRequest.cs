@@ -14,6 +14,6 @@ namespace bsc_be.DTOs
         [Required(ErrorMessage = "Price is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Price can't be less than 1")]
         public int Price { get; set; } = 0;
-        public List<long> types {get;set;}= [];
+        public List<long> Types {get;set;}= [];
     }
 }

@@ -32,8 +32,12 @@ export class GigTypeSelectorComponent implements ControlValueAccessor {
       this.selectedIds = [];
     }
   }
-  registerOnChange(fn: any): void {}
-  registerOnTouched(fn: any): void {}
+  registerOnChange(fn: any): void {
+    this.onChange = fn
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn
+  }
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
   }

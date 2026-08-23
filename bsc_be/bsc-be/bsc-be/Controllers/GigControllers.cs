@@ -42,6 +42,7 @@ namespace bsc_be.Controllers
         [HttpPost()]
         public async Task<IActionResult> CreateGig([FromBody] GigRequest request)
         {
+            return BadRequest("test");
             var userId = long.Parse(User.FindFirst("userId")!.Value);
             var roleString = User.FindFirst("userRole")!.Value;
             Enum.TryParse(roleString, out UserRole role);

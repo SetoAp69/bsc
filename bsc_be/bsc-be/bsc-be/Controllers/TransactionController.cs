@@ -103,7 +103,7 @@ namespace bsc_be.Controllers
             }
             catch (TransactionNotFoundException)
             {
-                return NoContent();
+                return NotFound();
             }
             catch (Exception ex)
             {

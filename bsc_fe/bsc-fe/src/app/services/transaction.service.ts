@@ -41,7 +41,7 @@ export class TransactionService {
   }
   getTransactionById(transactionId: number) {
     return this.http.get<TransactionResponse>(
-      `${environment.apiUrl}/transactions/detail/${transactionId}`,
+      `${environment.apiUrl}/transactions/${transactionId}`,
     );
   }
 

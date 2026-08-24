@@ -14,6 +14,6 @@ namespace bsc_be.Services
 
         public Task<Boolean> UpdateTransactionItemAsync(TransactionItemUpdateRequest request);
 
-        public Task<Boolean> DeleteTransactionAsync(long transactionId);
+        public Task DeleteTransactionAsync(long transactionId);
     }
 }

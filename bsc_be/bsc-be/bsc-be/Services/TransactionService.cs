@@ -44,7 +44,7 @@ namespace bsc_be.Services
             var transaction = await _transactionRepository.GetByIdAsync(transactionId, "Gig", "Rating", "Item");
             if (transaction == null)
             {
-                throw new Exception("Transaction not found");
+                throw new TransactionNotFoundException(transactionId.ToString());
             }
             return toTransactionResponse(transaction);
         }
@@ -160,13 +160,13 @@ namespace bsc_be.Services
         }
 
 
-        public async Task<Boolean> DeleteTransactionAsync(long transactionId)
+        public async Task DeleteTransactionAsync(long transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);
             if (transaction == null)
             {
                 _logger.LogWarning("Transaction not found for transaction id {TransactionId}", transaction);
-                return false;
+                throw new TransactionNotFoundException(transactionId.ToString());
             }
 
             await _transactionRepository.BeginTransactionAsync();
@@ -176,12 +176,11 @@ namespace bsc_be.Services
                 _transactionRepository.Update(transaction);
                 await _transactionRepository.SaveChangesAsync();
                 await _transactionRepository.CommitTransactionAsync();
-                return true;
             }
             catch
             {
                 await _transactionRepository.RollbackTransactionAsync();
-                return false;
+                throw new Exception();
             }
 
         }

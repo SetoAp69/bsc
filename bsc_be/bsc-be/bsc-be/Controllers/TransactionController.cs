@@ -26,19 +26,23 @@ namespace bsc_be.Controllers
             var transactions = await _transactionService.GetTransactionsAsync(userId, role);
             if (transactions == null)
             {
-                return NotFound();
+                return NoContent();
             }
             return Ok(transactions);
         }
 
         [Authorize]
-        [HttpGet("api/transactions/detail/{transactionId}")]
+        [HttpGet("api/transactions/{transactionId}")]
         public async Task<IActionResult> GetTransactionById(int transactionId)
         {
             try
             {
                 var transaction = await _transactionService.GetTransactionByIdAsync(transactionId);
                 return Ok(transaction);
+            }
+            catch (TransactionNotFoundException ex)
+            {
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -56,7 +60,7 @@ namespace bsc_be.Controllers
                 var transaction = await _transactionService.CreateTransactionAsync(userId, request);
                 if (transaction)
                 {
-                    return Ok(new { status = "Success", message = "Transaction created successfully", transaction = transaction });
+                    return Created();
                 }
                 else
                 {
@@ -94,11 +98,12 @@ namespace bsc_be.Controllers
         {
             try
             {
-                var isDeleteSuccess = await _transactionService.DeleteTransactionAsync(transactionId);
-                if (isDeleteSuccess)
-                    return Ok(new { status = "Success", message = "Transaction deleted successfully" });
-                else
-                    return NotFound();
+                await _transactionService.DeleteTransactionAsync(transactionId);
+                return Ok(new { status = "Success", message = "Transaction deleted successfully" });
+            }
+            catch (TransactionNotFoundException)
+            {
+                return NoContent();
             }
             catch (Exception ex)
             {
